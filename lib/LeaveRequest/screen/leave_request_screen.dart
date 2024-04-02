@@ -1,4 +1,4 @@
-import 'package:carparking/Home/Employee/employee_screen.dart';
+import 'package:carparking/Home/Employee/screen/employee_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/color.dart';

@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../util/color.dart';
+import '../../../util/color.dart';
 import 'employee_details_screen.dart';
+
 
 class EmployeeScreen extends StatefulWidget {
   final int index;
@@ -17,7 +18,7 @@ class EmployeeScreen extends StatefulWidget {
 }
 
 class _EmployeeScreenState extends State<EmployeeScreen> {
-  List<EmployeeModel> empList = [];
+  List<EmpModel> empList = [];
 
   String role = '';
 

@@ -1,4 +1,4 @@
-import 'package:carparking/Home/Employee/employee_screen.dart';
+import 'package:carparking/Home/Employee/screen/employee_screen.dart';
 import 'package:carparking/PayRoll/widget/my_payroll_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

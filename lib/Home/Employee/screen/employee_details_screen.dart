@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../util/color.dart';
+import '../../../util/color.dart';
 
 class EmployeeDetailsScreen extends StatefulWidget {
   const EmployeeDetailsScreen({super.key});

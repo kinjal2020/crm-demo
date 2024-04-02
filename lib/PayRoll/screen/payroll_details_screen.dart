@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Home/Employee/employee_details_screen.dart';
+import '../../Home/Employee/screen/employee_details_screen.dart';
 import '../../Home/Employee/model/employee_model.dart';
 import '../../util/color.dart';
 

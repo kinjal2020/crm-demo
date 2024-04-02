@@ -44,9 +44,6 @@ class _IntroScreenState extends State<IntroScreen> {
         body: PageView(
           children: _list,
           scrollDirection: Axis.horizontal,
-
-          // reverse: true,
-          // physics: BouncingScrollPhysics(),
           controller: controller,
           onPageChanged: (num) {
             setState(() {

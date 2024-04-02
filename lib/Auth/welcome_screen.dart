@@ -1,4 +1,5 @@
 import 'package:carparking/Auth/choice_screen.dart';
+import 'package:carparking/Auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,7 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         await SharedPreferences.getInstance();
                     pref.setString('role', 'emp');
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ChoiceScreen()));
+                        builder: (context) => LoginScreen()));
                   },
                   child: Container(
                     height: 55,

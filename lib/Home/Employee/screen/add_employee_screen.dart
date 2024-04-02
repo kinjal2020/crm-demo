@@ -1,55 +1,58 @@
-import 'package:carparking/Home/Task/provider/task_provider.dart';
-import 'package:carparking/util/color.dart';
+import 'dart:io';
+
+import 'package:carparking/Home/Employee/provider/employee_provider.dart';
+import 'package:carparking/util/toast_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../main.dart';
-import '../../util/toast_message.dart';
+import '../../../util/color.dart';
 
-class AssignTaskScreen extends StatefulWidget {
-  const AssignTaskScreen({super.key});
+class AddEmployeeScreen extends StatefulWidget {
+  const AddEmployeeScreen({super.key});
 
   @override
-  State<AssignTaskScreen> createState() => _AssignTaskScreenState();
+  State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
 }
 
-class _AssignTaskScreenState extends State<AssignTaskScreen> {
-  TextEditingController taskIdController = TextEditingController();
-  TextEditingController taskCodeController = TextEditingController();
-  TextEditingController taskNameController = TextEditingController();
-  TextEditingController assignToController = TextEditingController();
-  TextEditingController managerNameController = TextEditingController();
-  TextEditingController currentStatusController = TextEditingController();
-  TextEditingController assignDateController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
-  TextEditingController timeTakenController = TextEditingController();
+class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  File? imageFile;
+  TextEditingController employeeIdController = TextEditingController();
+  TextEditingController employeeFirstNameController = TextEditingController();
+  TextEditingController employeeLastNameController = TextEditingController();
+  TextEditingController employeePasswordController = TextEditingController();
+  TextEditingController employeeConfirmPasswordController =
+      TextEditingController();
+  TextEditingController employeeEmailIdController = TextEditingController();
+  TextEditingController employeeJobPositionController = TextEditingController();
+  TextEditingController employeeDepartmentController = TextEditingController();
+  TextEditingController employeeTeamController = TextEditingController();
 
-  DateTime? startDate;
-  DateTime? endDate;
   var formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  Future assignTask() async {
-    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-    try {
-      await taskProvider.assignTask(
-          taskCodeController.text,
-          taskNameController.text,
-          assignToController.text,
-          managerNameController.text,
-          currentStatusController.text,
-          assignDateController.text,
-          endDateController.text,
-          timeTakenController.text);
-      ToastMessage().showSuccessMessage('Task Assigned');
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-          (route) => false);
-    } catch (e) {
-      print(e);
-      ToastMessage().showErrorMessage('Something went wrong.');
+  Future addEmployee() async {
+    final employeeProvider =
+        Provider.of<EmployeeProvider>(context, listen: false);
+
+    await employeeProvider.addEmployee(
+        employeeFirstNameController.text,
+        employeeLastNameController.text,
+        imageFile!.path,
+        employeePasswordController.text,
+        employeeEmailIdController.text,
+        employeeJobPositionController.text,
+        employeeDepartmentController.text,
+        employeeTeamController.text);
+  }
+
+  pickImage() async {
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        imageFile = File(image.path);
+      });
     }
   }
 
@@ -65,7 +68,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
             },
             icon: Icon(CupertinoIcons.back)),
         title: Text(
-          'Assign Task',
+          'Add Employee',
           style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
         ),
         iconTheme: IconThemeData(color: whiteColor),
@@ -79,61 +82,59 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(
-                //   'Task Id',
-                //   style: TextStyle(
-                //     color: grayColor,
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 5,
-                // ),
-                // TextFormField(
-                //   validator: (value) {
-                //     if (value!.isEmpty) {
-                //       return 'Enter Task Id';
-                //     }
-                //   },
-                //   controller: taskIdController,
-                //   decoration: InputDecoration(
-                //     focusedErrorBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       borderSide: BorderSide(
-                //         color: errorColor,
-                //         width: 2.0,
-                //       ),
-                //     ),
-                //     errorBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       borderSide: BorderSide(
-                //         color: errorColor,
-                //         width: 2.0,
-                //       ),
-                //     ),
-                //     enabledBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       borderSide: BorderSide(
-                //         color: grayColor.withOpacity(0.2),
-                //         width: 2.0,
-                //       ),
-                //     ),
-                //     focusedBorder: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       borderSide: BorderSide(
-                //         color: primaryColor,
-                //       ),
-                //     ),
-                //     contentPadding:
-                //         EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: Stack(
+                    children: [
+                      (imageFile == null)
+                          ? Container(
+                              width: 120,
+                              height: 120,
+                              child: Center(
+                                child: Text('Add'),
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black12,
+                                shape: BoxShape.circle,
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 60,
+                              backgroundImage: FileImage(imageFile!),
+                            ),
+                      Positioned(
+                          top: 80,
+                          left: 85,
+                          child: InkWell(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: primaryColor),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: whiteColor,
+                                    size: 22,
+                                  ),
+                                )),
+                          ))
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
                 Text(
-                  'Task Code',
-                  style:
-                      TextStyle(color: grayColor, fontWeight: FontWeight.w500),
+                  'Employee Id',
+                  style: TextStyle(
+                    color: grayColor,
+                  ),
                 ),
                 SizedBox(
                   height: 5,
@@ -141,10 +142,10 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter Task code';
+                      return 'Enter Employee Id';
                     }
                   },
-                  controller: taskCodeController,
+                  controller: employeeIdController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -181,7 +182,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Task Name',
+                  'First Name',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -191,10 +192,10 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter Task name';
+                      return 'Enter employee first name';
                     }
                   },
-                  controller: taskNameController,
+                  controller: employeeFirstNameController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -231,7 +232,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Assign To',
+                  'Last Name',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -241,10 +242,10 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter assign to';
+                      return 'Enter employee last name';
                     }
                   },
-                  controller: assignToController,
+                  controller: employeeLastNameController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -281,7 +282,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Manager Name',
+                  'Password',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -291,10 +292,10 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter manager name';
+                      return 'Enter password';
                     }
                   },
-                  controller: managerNameController,
+                  controller: employeePasswordController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -331,7 +332,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Current Status',
+                  'Confirm Password',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -341,10 +342,12 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter current status';
+                      return 'Enter password';
+                    } else if (employeePasswordController.text != value) {
+                      return 'password and confirm password should be same.';
                     }
                   },
-                  controller: currentStatusController,
+                  controller: employeeConfirmPasswordController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -381,7 +384,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Assign Date',
+                  'Email Id',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -391,10 +394,12 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter assign date';
+                      return 'Enter email';
+                    } else if (!value.contains('@')) {
+                      return 'Enter valid email';
                     }
                   },
-                  controller: assignDateController,
+                  controller: employeeEmailIdController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -409,29 +414,6 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                         color: errorColor,
                         width: 2.0,
                       ),
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () async {
-                        startDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2050));
-
-                        if (startDate != null) {
-                          setState(() {
-                            String formatedDate =
-                                DateFormat('dd-MM-yyyy').format(startDate!);
-                            assignDateController.text = formatedDate;
-                            if (endDate != null) {
-                              var timeDate =
-                                  endDate!.difference(startDate!).inDays;
-                              timeTakenController.text = '$timeDate Days';
-                            }
-                          });
-                        }
-                      },
-                      icon: Icon(Icons.calendar_month),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -454,7 +436,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'End Date',
+                  'Job Position',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -464,10 +446,10 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter end date';
+                      return 'Enter job position';
                     }
                   },
-                  controller: endDateController,
+                  controller: employeeJobPositionController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -482,27 +464,6 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                         color: errorColor,
                         width: 2.0,
                       ),
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () async {
-                        endDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2050));
-
-                        if (endDate != null) {
-                          setState(() {
-                            String formatedDate =
-                                DateFormat('dd-MM-yyyy').format(endDate!);
-                            endDateController.text = formatedDate;
-                            var timeDate =
-                                endDate!.difference(startDate!).inDays;
-                            timeTakenController.text = '$timeDate Days';
-                          });
-                        }
-                      },
-                      icon: Icon(Icons.calendar_month),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -525,7 +486,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                   height: 10,
                 ),
                 Text(
-                  'Time Taken',
+                  'Department',
                   style:
                       TextStyle(color: grayColor, fontWeight: FontWeight.w500),
                 ),
@@ -535,10 +496,60 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Enter time taken';
+                      return 'Enter department';
                     }
                   },
-                  controller: timeTakenController,
+                  controller: employeeDepartmentController,
+                  decoration: InputDecoration(
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(
+                        color: errorColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(
+                        color: errorColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(
+                        color: grayColor.withOpacity(0.2),
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                      ),
+                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Team',
+                  style:
+                      TextStyle(color: grayColor, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Enter team';
+                    }
+                  },
+                  controller: employeeTeamController,
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -581,32 +592,28 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                           height: 55,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: primaryColor,
-                                blurRadius: 1,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                            child: CircularProgressIndicator(
-                              color: whiteColor,
-                            ),
+                            child: CircularProgressIndicator(color: whiteColor,),
                           ),
                         )
                       : InkWell(
                           onTap: () {
                             if (formKey.currentState!.validate()) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              assignTask().then((value) {
+                              if (imageFile == null) {
+                                ToastMessage().showErrorMessage('Pick Image');
+                              } else {
                                 setState(() {
-                                  isLoading = false;
+                                  isLoading = true;
                                 });
-                              });
+                                addEmployee().then((value) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.of(context).pop();
+                                });
+                              }
                             }
                           },
                           child: Container(
@@ -617,7 +624,7 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                                 borderRadius: BorderRadius.circular(10)),
                             child: Center(
                               child: Text(
-                                'Assign',
+                                'Save',
                                 style:
                                     TextStyle(color: whiteColor, fontSize: 16),
                               ),

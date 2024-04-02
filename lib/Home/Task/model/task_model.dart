@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TaskModel {
   final String? taskId;
   final String? taskName;
@@ -19,6 +21,19 @@ class TaskModel {
       required this.assignDate,
       required this.endDate,
       required this.timeTaken});
+
+  factory TaskModel.fromDatabase(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return TaskModel(
+        taskId: doc.id,
+        taskName: doc.data()!['taskName'],
+        taskCode: doc.data()!['taskCode'],
+        assignTo: doc.data()!['assignTo'],
+        managerName: doc.data()!['managerName'],
+        currentStatus: doc.data()!['currentStatus'],
+        assignDate: doc.data()!['assignDate'],
+        endDate: doc.data()!['endDate'],
+        timeTaken: doc.data()!['timeTaken']);
+  }
 }
 
 List<TaskModel> taskList = [

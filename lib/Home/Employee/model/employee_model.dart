@@ -1,8 +1,9 @@
 import 'package:carparking/PayRoll/model/payroll_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../LeaveRequest/model/leave_model.dart';
 
-class EmployeeModel {
+class EmpModel {
   final String? employeeName;
   final String? employeeId;
   final String? employeeDept;
@@ -12,7 +13,7 @@ class EmployeeModel {
   final List<PayRollModel> payrollList;
   final List<LeaveModel> leaveList;
 
-  EmployeeModel(
+  EmpModel(
       {required this.employeeName,
       required this.employeeId,
       required this.employeePhoto,
@@ -23,8 +24,54 @@ class EmployeeModel {
       required this.employeePunchIn});
 }
 
-List<EmployeeModel> employeeList = [
+class EmployeeModel {
+  final String? employeeFirstName;
+  final String? employeeImage;
+  final String? employeeLastName;
+  final String? employeeId;
+  final String? employeeDept;
+  final String? employeePunchIn;
+  final String? employeePhoto;
+  final String? team;
+  final String? password;
+  final String? employeeEmail;
+  final String? employeePosition;
+
+
   EmployeeModel(
+      {required this.employeeFirstName,
+      required this.employeeLastName,
+      required this.employeeImage,
+      required this.employeeId,
+      required this.employeeDept,
+      required this.employeePunchIn,
+      required this.employeePhoto,
+      required this.team,
+      required this.password,
+      required this.employeeEmail,
+      required this.employeePosition,
+     });
+
+  factory EmployeeModel.fromFirebase(
+      DocumentSnapshot<Map<String, dynamic>> doc) {
+    return EmployeeModel(
+        employeeFirstName: doc.data()!['employeeFirstName'],
+        employeeLastName: doc.data()!['employeeLastName'],
+        employeeImage: doc.data()!['employeeImage'],
+        employeeId: doc.id,
+        employeeDept: doc.data()!['department'],
+        employeePunchIn: doc.data()!['employeePunchIn'] ?? '',
+        employeePhoto: doc.data()!['employeeImage'],
+        team: doc.data()!['team'],
+        password: doc.data()!['password'] ,
+        employeeEmail: doc.data()!['emailId'],
+        employeePosition: doc.data()!['jobPosition'],
+       );
+  }
+}
+
+List<EmpModel> employeeList = [
+  EmpModel(
       employeeName: 'Ashwanath',
       team: 'A Team',
       payrollList: [
@@ -121,7 +168,7 @@ List<EmployeeModel> employeeList = [
       employeePunchIn: '8:04',
       employeePhoto:
           'https://img.freepik.com/premium-photo/business-woman-entrepreneur-working-office-professional-employee-workplace-young-beautiful-secretary-girl_265223-28262.jpg'),
-  EmployeeModel(
+  EmpModel(
       employeeName: 'Ashwanath',
       employeeId: 'Employee102',
       team: 'B Team',
@@ -207,7 +254,7 @@ List<EmployeeModel> employeeList = [
       employeePunchIn: '8:04',
       employeePhoto:
           'https://img.freepik.com/premium-photo/business-woman-entrepreneur-working-office-professional-employee-workplace-young-beautiful-secretary-girl_265223-28262.jpg'),
-  EmployeeModel(
+  EmpModel(
       employeeName: 'Ashwanath',
       employeeId: 'Employee103',
       team: 'B Team',
@@ -293,7 +340,7 @@ List<EmployeeModel> employeeList = [
       leaveList: [],
       employeePhoto:
           'https://img.freepik.com/premium-photo/business-woman-entrepreneur-working-office-professional-employee-workplace-young-beautiful-secretary-girl_265223-28262.jpg'),
-  EmployeeModel(
+  EmpModel(
       employeeName: 'Ashwanath',
       employeeId: 'Employee101',
       team: 'A Team',

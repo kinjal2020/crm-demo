@@ -3,16 +3,18 @@ import 'dart:async';
 import 'package:carparking/Home/Task/assign_task_screen.dart';
 import 'package:carparking/Home/Task/model/task_model.dart';
 import 'package:carparking/Home/Task/task_screen.dart';
-import 'package:carparking/Home/Employee/add_employee_screen.dart';
-import 'package:carparking/Home/Employee/employee_screen.dart';
+import 'package:carparking/Home/Employee/screen/add_employee_screen.dart';
 
 import 'package:carparking/util/color.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Auth/provider/auth_provider.dart';
 import '../../LeaveRequest/widget/my_leave_screen.dart';
-import '../Employee/employee_details_screen.dart';
+import '../Employee/screen/employee_details_screen.dart';
 import '../Employee/model/employee_model.dart';
+import '../Employee/screen/employee_screen.dart';
 import 'model/holiday_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: true);
     return Scaffold(
       drawer: Drawer(),
       appBar: AppBar(
@@ -180,12 +183,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'Treesa Silby',
-                                    style: TextStyle(
-                                        color: blackColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                  Container(
+                                    width: 100,
+                                    child: Text(
+                                      authProvider.user!.email!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                   Text(
                                     'Human Resource',
@@ -442,106 +449,132 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           height: 150,
                           width: double.infinity,
-                          child: ListView.builder(
-                              itemCount: employeeList.length >= 3
-                                  ? 3
-                                  : employeeList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EmployeeDetailsScreen()));
-                                    },
-                                    child: Container(
-                                      height: 130,
-                                      width: 270,
-                                      decoration: BoxDecoration(
-                                          color: whiteColor,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: secondaryColor
-                                                    .withOpacity(0.2),
-                                                spreadRadius: 0.2,
-                                                blurRadius: 9)
-                                          ]),
-                                      child: Padding(
+                          child: FutureBuilder(builder: (context,
+                              AsyncSnapshot<List<EmployeeModel>> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              if (snapshot.data!.isNotEmpty) {
+                                return ListView.builder(
+                                    itemCount: snapshot.data!.length >= 3
+                                        ? 3
+                                        : employeeList.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 35,
-                                              backgroundImage: NetworkImage(
-                                                  employeeList[index]
-                                                      .employeePhoto!),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EmployeeDetailsScreen()));
+                                          },
+                                          child: Container(
+                                            height: 130,
+                                            width: 270,
+                                            decoration: BoxDecoration(
+                                                color: whiteColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: secondaryColor
+                                                          .withOpacity(0.2),
+                                                      spreadRadius: 0.2,
+                                                      blurRadius: 9)
+                                                ]),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 35,
+                                                    backgroundImage:
+                                                        NetworkImage(snapshot
+                                                            .data![index]
+                                                            .employeePhoto!),
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.data![index]
+                                                            .employeeFirstName!,
+                                                        style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      Text(
+                                                        snapshot.data![index]
+                                                            .employeeId!,
+                                                        style: TextStyle(
+                                                            color: grayColor,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      Text(
+                                                        snapshot.data![index]
+                                                            .employeeDept!,
+                                                        style: TextStyle(
+                                                            color: grayColor,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      Text(
+                                                        'Punch In - ${snapshot.data![index].employeePunchIn!} AM',
+                                                        style: TextStyle(
+                                                            color: grayColor,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  employeeList[index]
-                                                      .employeeName!,
-                                                  style: TextStyle(
-                                                      color: blackColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                  employeeList[index]
-                                                      .employeeId!,
-                                                  style: TextStyle(
-                                                      color: grayColor,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                  employeeList[index]
-                                                      .employeeDept!,
-                                                  style: TextStyle(
-                                                      color: grayColor,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Text(
-                                                  'Punch In - ${employeeList[index].employeePunchIn!} AM',
-                                                  style: TextStyle(
-                                                      color: grayColor,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    });
+                              } else {
+                                return Center(
+                                  child: Text(
+                                    'No Employees Available',
+                                    style: TextStyle(color: Colors.grey),
                                   ),
                                 );
-                              }),
+                              }
+                            }
+                          }),
                         ),
                       ],
                     ),
