@@ -1,8 +1,12 @@
 import 'package:carparking/LeaveRequest/model/leave_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../util/color.dart';
+import '../../util/toast_message.dart';
+import '../provider/leave_provider.dart';
 
 class LeaveDetailsScreen extends StatefulWidget {
   final LeaveModel leaveModel;
@@ -14,6 +18,46 @@ class LeaveDetailsScreen extends StatefulWidget {
 }
 
 class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
+  String role = '';
+  bool isApproveLoading = false;
+  bool isRejectLoading = false;
+
+  getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    role = pref.getString('role') ?? '';
+    setState(() {});
+    print(role);
+  }
+
+  approveLeave() async {
+    final leaveProvider = Provider.of<LeaveProvider>(context, listen: false);
+    try {
+      await leaveProvider.approveLeave(widget.leaveModel.leaveId!);
+      ToastMessage().showSuccessMessage('Leave Approved');
+      Navigator.of(context).pop();
+    } catch (e) {
+      // TODO
+    }
+  }
+
+  rejectLeave() async {
+    final leaveProvider = Provider.of<LeaveProvider>(context, listen: false);
+    try {
+      await leaveProvider.rejectLeave(widget.leaveModel.leaveId!);
+      ToastMessage().showSuccessMessage('Leave Rejected');
+      Navigator.of(context).pop();
+    } catch (e) {
+      // TODO
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +70,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
             },
             icon: Icon(CupertinoIcons.back)),
         title: Text(
-          'Leave Request',
+          'Leave',
           style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
         ),
         iconTheme: IconThemeData(color: whiteColor),
@@ -71,7 +115,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                       ),
                       Container(
                           child: Text(
-                        "Employee001",
+                        widget.leaveModel.empId!,
                       )),
                     ],
                   ),
@@ -109,7 +153,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Designer")),
+                      Container(child: Text(widget.leaveModel.position!)),
                     ],
                   ),
                 ),
@@ -146,7 +190,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Developing")),
+                      Container(child: Text(widget.leaveModel.requestDate!)),
                     ],
                   ),
                 ),
@@ -183,7 +227,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("31-08-2018")),
+                      Container(child: Text(widget.leaveModel.leaveType!)),
                     ],
                   ),
                 ),
@@ -220,7 +264,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("India")),
+                      Container(child: Text(widget.leaveModel.reason!)),
                     ],
                   ),
                 ),
@@ -257,7 +301,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Tamil Nadu")),
+                      Container(child: Text(widget.leaveModel.totalDays!)),
                     ],
                   ),
                 ),
@@ -294,7 +338,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Coimbatore")),
+                      Container(child: Text(widget.leaveModel.fromDate!)),
                     ],
                   ),
                 ),
@@ -331,51 +375,184 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("9080785342")),
+                      Container(child: Text(widget.leaveModel.toDate!)),
                     ],
                   ),
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 30,
               ),
-              Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(
-                    color: grayColor.withOpacity(0.2),
-                    width: 2.0,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    //  mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          width: 150,
-                          child: Text(
-                            "Available Leave",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          )),
-                      Container(
-                        width: 20,
-                        height: 20,
+              // Container(
+              //   height: 40,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10.0),
+              //     border: Border.all(
+              //       color: grayColor.withOpacity(0.2),
+              //       width: 2.0,
+              //     ),
+              //   ),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Row(
+              //       //  mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Container(
+              //             width: 150,
+              //             child: Text(
+              //               "Available Leave",
+              //               style: TextStyle(
+              //                   fontWeight: FontWeight.bold, fontSize: 16),
+              //             )),
+              //         Container(
+              //           width: 20,
+              //           height: 20,
+              //           child: Text(
+              //             ":",
+              //             style: TextStyle(fontWeight: FontWeight.w900),
+              //           ),
+              //         ),
+              //         Container(child: Text("9857463789")),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+
+              (role == 'hr')
+                  ? (widget.leaveModel.status != 'Pending')
+                      ? Container(
+                          height: 55,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Center(
+                            child: Text(
+                              widget.leaveModel.status!,
+                              style: TextStyle(color: whiteColor, fontSize: 16),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 40.0, right: 40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              (isApproveLoading == true)
+                                  ? Container(
+                                      height: 55,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          100,
+                                      decoration: BoxDecoration(
+                                          color: whiteColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isApproveLoading = true;
+                                        });
+                                        approveLeave().then((value) {
+                                          setState(() {
+                                            isApproveLoading = false;
+                                          });
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 55,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    2 -
+                                                100,
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Approve',
+                                            style: TextStyle(
+                                                color: whiteColor,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                              (isRejectLoading == true)
+                                  ? Container(
+                                      height: 55,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          100,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: primaryColor,
+                                        ),
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isRejectLoading = true;
+                                        });
+                                        rejectLeave().then((value) {
+                                          setState(() {
+                                            isRejectLoading = false;
+                                          });
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 55,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    2 -
+                                                100,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: primaryColor,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Reject',
+                                            style: TextStyle(
+                                                color: primaryColor,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        )
+                  : Container(
+                      height: 55,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
                         child: Text(
-                          ":",
-                          style: TextStyle(fontWeight: FontWeight.w900),
+                          widget.leaveModel.status!,
+                          style: TextStyle(color: whiteColor, fontSize: 16),
                         ),
                       ),
-                      Container(child: Text("9857463789")),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
+                    ),
             ],
           ),
         ),

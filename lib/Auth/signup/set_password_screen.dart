@@ -31,7 +31,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   bool isLoading = false;
 
   Future signUp() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
     try {
       await authProvider.createUser(
           widget.email, confirmPasswordController.text, widget.phone);

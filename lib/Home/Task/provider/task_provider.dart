@@ -51,8 +51,28 @@ class TaskProvider with ChangeNotifier {
     });
   }
 
+  updateTaskStatus(
+    String taskId,
+  ) async {
+    await FirebaseFirestore.instance.collection('Tasks').doc(taskId).update({
+      'currentStatus': 'Completed',
+    });
+  }
+
   Future<List<TaskModel>> getTask() async {
-    var data = await FirebaseFirestore.instance.collection('Tasks').get();
+    var data = await FirebaseFirestore.instance
+        .collection('Tasks')
+        .where('currentStatus', isEqualTo: 'Pending')
+        .get();
+    return data.docs.map((e) => TaskModel.fromDatabase(e)).toList();
+  }
+
+  Future<List<TaskModel>> getEmployeeTask(String team) async {
+    var data = await FirebaseFirestore.instance
+        .collection('Tasks')
+        .where('currentStatus', isEqualTo: 'Pending')
+        .where('team', isEqualTo: team)
+        .get();
     return data.docs.map((e) => TaskModel.fromDatabase(e)).toList();
   }
 

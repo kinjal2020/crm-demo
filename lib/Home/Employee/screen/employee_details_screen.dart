@@ -1,14 +1,40 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carparking/Home/Employee/provider/employee_provider.dart';
+import 'package:carparking/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../../util/color.dart';
+import '../../../util/toast_message.dart';
 
 class EmployeeDetailsScreen extends StatefulWidget {
-  const EmployeeDetailsScreen({super.key});
+  final String employeeFirstName;
+  final String employeeImage;
+  final String employeeLastName;
+  final String employeeId;
+  final String employeeDept;
+  final String employeePunchIn;
+  final String team;
+  final String password;
+  final String employeeEmail;
+  final String employeePosition;
+
+  const EmployeeDetailsScreen(
+      {super.key,
+      required this.employeeFirstName,
+      required this.employeeImage,
+      required this.employeeLastName,
+      required this.employeeId,
+      required this.employeeDept,
+      required this.employeePunchIn,
+      required this.team,
+      required this.password,
+      required this.employeeEmail,
+      required this.employeePosition});
 
   @override
   State<EmployeeDetailsScreen> createState() => _EmployeeDetailsScreenState();
@@ -19,9 +45,26 @@ enum Gender { Male, Female }
 enum MaritalStatus { Yes, No }
 
 class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
-
   Gender gender = Gender.Male;
   MaritalStatus status = MaritalStatus.Yes;
+  bool isLoading = false;
+  bool isDeleteLoading = false;
+
+  Future deleteEmp() async {
+    final taskProvider = Provider.of<EmployeeProvider>(context, listen: false);
+    try {
+      await taskProvider.deleteEmployee(
+        widget.employeeId,
+      );
+      ToastMessage().showSuccessMessage('Employee Deleted.');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+          (route) => false);
+    } catch (e) {
+      print(e);
+      ToastMessage().showErrorMessage('Something went wrong.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +78,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
             },
             icon: Icon(CupertinoIcons.back)),
         title: Text(
-          'Ashwanth',
+          widget.employeeFirstName,
           style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
         ),
         iconTheme: IconThemeData(color: whiteColor),
@@ -54,7 +97,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      // backgroundImage: FileImage(imageFile!),
+                      backgroundImage: FileImage(File(widget.employeeImage)),
                       backgroundColor: grayColor,
                     ),
                     Positioned(
@@ -99,7 +142,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       ),
                       Container(
                           child: Text(
-                        "Employee001",
+                        widget.employeeId,
                       )),
                     ],
                   ),
@@ -137,7 +180,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Designer")),
+                      Container(child: Text(widget.employeePosition)),
                     ],
                   ),
                 ),
@@ -174,7 +217,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Developing")),
+                      Container(child: Text(widget.employeeDept)),
                     ],
                   ),
                 ),
@@ -211,7 +254,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("31-08-2018")),
+                      Container(child: Text("")),
                     ],
                   ),
                 ),
@@ -285,7 +328,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Tamil Nadu")),
+                      Container(child: Text(" ")),
                     ],
                   ),
                 ),
@@ -322,7 +365,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Coimbatore")),
+                      Container(child: Text(" ")),
                     ],
                   ),
                 ),
@@ -359,7 +402,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("9080785342")),
+                      Container(child: Text("")),
                     ],
                   ),
                 ),
@@ -396,7 +439,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("9857463789")),
+                      Container(child: Text("")),
                     ],
                   ),
                 ),
@@ -433,7 +476,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("Employee01@gmail.com")),
+                      Container(child: Text(widget.employeeEmail)),
                     ],
                   ),
                 ),
@@ -639,7 +682,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       Container(
                         width: 150,
                         child: Text(
-                          "256/wshkiufchkljeadiofjhwqipswsfcweqafsfdlmgjvbpwoe;lsfdnviqaoehfwvknlsvd",
+                          "",
                         ),
                       ),
                     ],
@@ -661,7 +704,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   child: Center(
                       child: Text(
                     'Password Information',
-                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   )),
                 ),
               ),
@@ -742,11 +785,104 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       Container(
                         width: 150,
                         child: Text(
-                          "*******",
+                          "31/03/2006",
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 40.0, right: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    /*  (isLoading == true)
+                        ? Container(
+                      height: 55,
+                      width:
+                      MediaQuery.of(context).size.width / 2 - 100,
+                      decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                        :*/
+                    InkWell(
+                      onTap: () {
+                        // if (formKey.currentState!.validate()) {
+                        //   setState(() {
+                        //     isLoading = true;
+                        //   });
+                        //   updateTask().then((value) {
+                        //     setState(() {
+                        //       isLoading = false;
+                        //     });
+                        //   });
+                        // }
+                      },
+                      child: Container(
+                        height: 55,
+                        width: MediaQuery.of(context).size.width / 2 - 100,
+                        decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(color: whiteColor, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                     (isDeleteLoading == true)
+                        ? Container(
+                      height: 55,
+                      width:
+                      MediaQuery.of(context).size.width / 2 - 100,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: CircularProgressIndicator(color: primaryColor,),
+                      ),
+                    )
+                        :
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          isDeleteLoading = true;
+                        });
+                        deleteEmp().then((value) {
+                          setState(() {
+                            isDeleteLoading = false;
+                          });
+                        });
+                      },
+                      child: Container(
+                        height: 55,
+                        width: MediaQuery.of(context).size.width / 2 - 100,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: primaryColor,
+                            ),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: primaryColor, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

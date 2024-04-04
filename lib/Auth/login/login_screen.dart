@@ -1,6 +1,8 @@
 import 'package:carparking/Auth/signup/otp_verification_screen.dart';
 import 'package:carparking/main.dart';
 import 'package:carparking/util/color.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
 
   Future signIn() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     try {
       await authProvider.loginUser(idController.text, passwordController.text);
       ToastMessage().showSuccessMessage('Login Successfully');
@@ -36,6 +39,42 @@ class _LoginScreenState extends State<LoginScreen> {
       print(e);
       if (e.toString().contains('firebase_auth/invalid-credential')) {
         ToastMessage().showErrorMessage('Invalid Credential.Please try again.');
+      }
+    }
+  }
+
+  Future signInEmp() async {
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    try {
+      var data = await FirebaseFirestore.instance
+          .collection('employee')
+          .where('emailId', isEqualTo: idController.text)
+          .get();
+      print(data.docs.length);
+      if (data.docs.length == 1) {
+        print(data.docs[0]['password']);
+        if (data.docs[0]['password'] == passwordController.text) {
+          var user1 = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: idController.text, password: passwordController.text);
+
+          authProvider.user = user1.user;
+          ToastMessage().showSuccessMessage('Login Successfully');
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+              (route) => false);
+        } else {
+          ToastMessage()
+              .showErrorMessage('Invalid Credential.Please try again.');
+        }
+      } else {
+        ToastMessage().showErrorMessage('Invalid Credential.Please try again.');
+      }
+    } catch (e) {
+      print(e);
+      if (e.toString().contains('firebase_auth/email-already-in-use')) {
+        signIn();
       }
     }
   }
@@ -180,14 +219,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                     setState(() {
                                       isLoading = true;
                                     });
-                                    if(pref.getString('role')=='emp'){
-
-                                    }
-                                    signIn().then((value) {
-                                      setState(() {
-                                        isLoading = false;
+                                    if (pref.getString('role') == 'emp') {
+                                      signInEmp().then((value) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                       });
-                                    });
+                                    } else {
+                                      signIn().then((value) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                      });
+                                    }
                                   }
                                 },
                                 child: Container(

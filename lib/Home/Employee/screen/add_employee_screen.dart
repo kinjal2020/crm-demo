@@ -44,7 +44,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         employeeEmailIdController.text,
         employeeJobPositionController.text,
         employeeDepartmentController.text,
-        employeeTeamController.text);
+        employeeTeamController.text,
+        employeeIdController.text);
+
   }
 
   pickImage() async {
@@ -595,7 +597,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               color: primaryColor,
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                            child: CircularProgressIndicator(color: whiteColor,),
+                            child: CircularProgressIndicator(
+                              color: whiteColor,
+                            ),
                           ),
                         )
                       : InkWell(

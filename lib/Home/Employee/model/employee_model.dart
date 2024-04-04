@@ -31,42 +31,39 @@ class EmployeeModel {
   final String? employeeId;
   final String? employeeDept;
   final String? employeePunchIn;
-  final String? employeePhoto;
+
   final String? team;
   final String? password;
   final String? employeeEmail;
   final String? employeePosition;
 
-
-  EmployeeModel(
-      {required this.employeeFirstName,
-      required this.employeeLastName,
-      required this.employeeImage,
-      required this.employeeId,
-      required this.employeeDept,
-      required this.employeePunchIn,
-      required this.employeePhoto,
-      required this.team,
-      required this.password,
-      required this.employeeEmail,
-      required this.employeePosition,
-     });
+  EmployeeModel({
+    required this.employeeFirstName,
+    required this.employeeLastName,
+    required this.employeeImage,
+    required this.employeeId,
+    required this.employeeDept,
+    required this.employeePunchIn,
+    required this.team,
+    required this.password,
+    required this.employeeEmail,
+    required this.employeePosition,
+  });
 
   factory EmployeeModel.fromFirebase(
       DocumentSnapshot<Map<String, dynamic>> doc) {
     return EmployeeModel(
-        employeeFirstName: doc.data()!['employeeFirstName'],
-        employeeLastName: doc.data()!['employeeLastName'],
-        employeeImage: doc.data()!['employeeImage'],
-        employeeId: doc.id,
-        employeeDept: doc.data()!['department'],
-        employeePunchIn: doc.data()!['employeePunchIn'] ?? '',
-        employeePhoto: doc.data()!['employeeImage'],
-        team: doc.data()!['team'],
-        password: doc.data()!['password'] ,
-        employeeEmail: doc.data()!['emailId'],
-        employeePosition: doc.data()!['jobPosition'],
-       );
+      employeeFirstName: doc.data()!['employeeFirstName'],
+      employeeLastName: doc.data()!['employeeLastName'],
+      employeeImage: doc.data()!['employeeImage'],
+      employeeId: doc.data()!['employeeId'],
+      employeeDept: doc.data()!['department'],
+      employeePunchIn: doc.data()!['employeePunchIn'] ?? '',
+      team: doc.data()!['team'],
+      password: doc.data()!['password'],
+      employeeEmail: doc.data()!['emailId'],
+      employeePosition: doc.data()!['jobPosition'],
+    );
   }
 }
 
@@ -153,15 +150,15 @@ List<EmpModel> employeeList = [
       ],
       leaveList: [
         LeaveModel(
-            empId: 'Employee101',
-            position: 'Senior Developer',
-            requestDate: '21/03/2024',
-            leaveType: 'Causal',
-            reason: 'Personal Reason',
-            totalDays: 2,
-            fromDate: '22/03/2024',
-            toDate: '23/03/2024',
-            availableLeave: 10)
+          empId: 'Employee101',
+          position: 'Senior Developer',
+          requestDate: '21/03/2024',
+          leaveType: 'Causal',
+          reason: 'Personal Reason',
+          totalDays: '2',
+          fromDate: '22/03/2024',
+          toDate: '23/03/2024', status: 'Pending', empName: '', leaveId: '',
+        )
       ],
       employeeId: 'Employee101',
       employeeDept: 'Developing',

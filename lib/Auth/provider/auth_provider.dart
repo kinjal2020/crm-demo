@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthenticationProvider with ChangeNotifier {
   User? user = FirebaseAuth.instance.currentUser;
-
+  QuerySnapshot<Map<String, dynamic>>? doc;
   createUser(String email, String password, String phone) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var user1 = await FirebaseAuth.instance

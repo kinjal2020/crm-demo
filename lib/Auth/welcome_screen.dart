@@ -65,11 +65,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Text('OR'),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 InkWell(
                   onTap: () async {

@@ -1,10 +1,12 @@
 import 'package:carparking/Auth/provider/auth_provider.dart';
 import 'package:carparking/Home/Task/provider/task_provider.dart';
 import 'package:carparking/Home/Task/task_screen.dart';
+import 'package:carparking/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../util/color.dart';
 import '../../util/toast_message.dart';
@@ -51,9 +53,11 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
   TextEditingController timeTakenController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool isLoading = false;
+  bool isMarkLoading = false;
   bool isDeleteLoading = false;
   DateTime? startDate;
   DateTime? endDate;
+  String role = '';
 
   Future updateTask() async {
     final taskProvider = Provider.of<TaskProvider>(context, listen: false);
@@ -78,16 +82,32 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
     }
   }
 
+  Future updateTaskStatus() async {
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    try {
+      await taskProvider.updateTaskStatus(
+        widget.taskId,
+      );
+      ToastMessage().showSuccessMessage('Task Updated.');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+          (route) => false);
+    } catch (e) {
+      print(e);
+      ToastMessage().showErrorMessage('Something went wrong.');
+    }
+  }
+
   Future deleteTask() async {
     final taskProvider = Provider.of<TaskProvider>(context, listen: false);
     try {
       await taskProvider.deleteTask(
-          widget.taskId,
-        );
+        widget.taskId,
+      );
       ToastMessage().showSuccessMessage('Task Deleted.');
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => TaskScreen()),
-              (route) => false);
+          (route) => false);
     } catch (e) {
       print(e);
       ToastMessage().showErrorMessage('Something went wrong.');
@@ -96,6 +116,7 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
 
   @override
   void initState() {
+    getData();
     // TODO: implement initStat
     taskIdController.text = widget.taskId;
     taskNameController.text = widget.taskName;
@@ -107,6 +128,13 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
     endDateController.text = widget.endDate;
     timeTakenController.text = widget.timeTaken;
     super.initState();
+  }
+
+  getData() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    role = pref.getString('role') ?? '';
+    setState(() {});
+    print(role);
   }
 
   @override
@@ -613,95 +641,149 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 40.0, right: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        (isLoading == true)
+                    child: (role == 'emp')
+                        ? (isMarkLoading == true)
                             ? Container(
                                 height: 55,
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 100,
+                                width: double.infinity,
                                 decoration: BoxDecoration(
                                     color: primaryColor,
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )
-                            : InkWell(
-                                onTap: () {
-                                  if (formKey.currentState!.validate()) {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    updateTask().then((value) {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  height: 55,
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      100,
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: Text(
-                                      'Edit',
-                                      style: TextStyle(
-                                          color: whiteColor, fontSize: 16),
-                                    ),
+                                  child: CircularProgressIndicator(
+                                    color: whiteColor,
                                   ),
-                                ),
-                              ),
-                        (isDeleteLoading == true)
-                            ? Container(
-                                height: 55,
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 100,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: primaryColor,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: CircularProgressIndicator(color: primaryColor,),
                                 ),
                               )
                             : InkWell(
                                 onTap: () {
                                   setState(() {
-                                    isDeleteLoading = true;
+                                    isMarkLoading = true;
                                   });
-                                  deleteTask().then((value) {
+                                  updateTaskStatus().then((value) {
                                     setState(() {
-                                      isDeleteLoading = false;
+                                      isMarkLoading = false;
                                     });
                                   });
                                 },
                                 child: Container(
                                   height: 55,
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      100,
+                                  width: double.infinity,
                                   decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: primaryColor,
-                                      ),
+                                      color: primaryColor,
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                     child: Text(
-                                      'Delete',
+                                      'Mark as Done',
                                       style: TextStyle(
-                                          color: primaryColor, fontSize: 16),
+                                          color: whiteColor, fontSize: 16),
                                     ),
                                   ),
                                 ),
-                              ),
-                      ],
-                    ),
+                              )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              (isLoading == true)
+                                  ? Container(
+                                      height: 55,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          100,
+                                      decoration: BoxDecoration(
+                                          color: primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        if (formKey.currentState!.validate()) {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          updateTask().then((value) {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 55,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    2 -
+                                                100,
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                                color: whiteColor,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                              (isDeleteLoading == true)
+                                  ? Container(
+                                      height: 55,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          100,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: primaryColor,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: CircularProgressIndicator(
+                                          color: primaryColor,
+                                        ),
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isDeleteLoading = true;
+                                        });
+                                        deleteTask().then((value) {
+                                          setState(() {
+                                            isDeleteLoading = false;
+                                          });
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 55,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    2 -
+                                                100,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: primaryColor,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                                color: primaryColor,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ],
+                          ),
                   ),
                 ],
               ),
