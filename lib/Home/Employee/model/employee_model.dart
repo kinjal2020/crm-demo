@@ -29,18 +29,39 @@ class EmployeeModel {
   final String? employeeImage;
   final String? employeeLastName;
   final String? employeeId;
+  final String? docId;
   final String? employeeDept;
   final String? employeePunchIn;
-
   final String? team;
   final String? password;
   final String? employeeEmail;
   final String? employeePosition;
+  final String? dob;
+  final String? state;
+  final String? city;
+  final String? country;
+  final String? gender;
+  final String? status;
+  final String? mobile;
+  final String? home;
+  final String? address;
+  final String? issueDate;
 
   EmployeeModel({
+    required this.city,
+    required this.country,
+    required this.gender,
+    required this.status,
+    required this.dob,
+    required this.state,
+    required this.mobile,
+    required this.home,
+    required this.address,
+    required this.issueDate,
     required this.employeeFirstName,
     required this.employeeLastName,
     required this.employeeImage,
+    required this.docId,
     required this.employeeId,
     required this.employeeDept,
     required this.employeePunchIn,
@@ -63,6 +84,17 @@ class EmployeeModel {
       password: doc.data()!['password'],
       employeeEmail: doc.data()!['emailId'],
       employeePosition: doc.data()!['jobPosition'],
+      docId: doc.id,
+      dob: doc.data()!['dOB'],
+      state: doc.data()!['state'],
+      mobile: doc.data()!['mobileNumber'],
+      home: doc.data()!['homeNumber'],
+      address: doc.data()!['address'],
+      issueDate: doc.data()!['issueDate'],
+      city: doc.data()!['city'],
+      country: doc.data()!['country'],
+      gender:doc.data()!['gender'],
+      status: doc.data()!['maritalStatus'],
     );
   }
 }
@@ -157,7 +189,10 @@ List<EmpModel> employeeList = [
           reason: 'Personal Reason',
           totalDays: '2',
           fromDate: '22/03/2024',
-          toDate: '23/03/2024', status: 'Pending', empName: '', leaveId: '',
+          toDate: '23/03/2024',
+          status: 'Pending',
+          empName: '',
+          leaveId: '',
         )
       ],
       employeeId: 'Employee101',

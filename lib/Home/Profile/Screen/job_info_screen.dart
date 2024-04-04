@@ -85,7 +85,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                     Container(
                         width: 150,
                         child: Text(
-                          "Hr Id",
+                          "Id",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         )),

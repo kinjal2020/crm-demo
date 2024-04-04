@@ -6,6 +6,7 @@ import 'package:carparking/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../util/color.dart';
@@ -22,6 +23,17 @@ class EmployeeDetailsScreen extends StatefulWidget {
   final String password;
   final String employeeEmail;
   final String employeePosition;
+  final String docId;
+  final String dob;
+  final String state;
+  final String country;
+  final String city;
+  final String mobile;
+  final String home;
+  final String address;
+  final String issueDate;
+  final String gender;
+  final String status;
 
   const EmployeeDetailsScreen(
       {super.key,
@@ -34,7 +46,18 @@ class EmployeeDetailsScreen extends StatefulWidget {
       required this.team,
       required this.password,
       required this.employeeEmail,
-      required this.employeePosition});
+      required this.employeePosition,
+      required this.docId,
+      required this.dob,
+      required this.state,
+      required this.mobile,
+      required this.home,
+      required this.address,
+      required this.issueDate,
+      required this.country,
+      required this.city,
+      required this.gender,
+      required this.status});
 
   @override
   State<EmployeeDetailsScreen> createState() => _EmployeeDetailsScreenState();
@@ -49,11 +72,29 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   MaritalStatus status = MaritalStatus.Yes;
   bool isLoading = false;
   bool isDeleteLoading = false;
+  bool isEditLoading = false;
+
+  File? imageFile;
+  TextEditingController employeeIdController = TextEditingController();
+  TextEditingController employeeFirstNameController = TextEditingController();
+  TextEditingController employeeLastNameController = TextEditingController();
+  TextEditingController employeePasswordController = TextEditingController();
+  TextEditingController employeeDOBController = TextEditingController();
+  TextEditingController employeeEmailIdController = TextEditingController();
+  TextEditingController employeeJobPositionController = TextEditingController();
+  TextEditingController employeeDepartmentController = TextEditingController();
+  TextEditingController employeeCountryController = TextEditingController();
+  TextEditingController employeeStateController = TextEditingController();
+  TextEditingController employeeCityController = TextEditingController();
+  TextEditingController employeeMobileController = TextEditingController();
+  TextEditingController employeeHomeNumberController = TextEditingController();
+  TextEditingController employeeAddressController = TextEditingController();
+  TextEditingController employeeIssueDateController = TextEditingController();
 
   Future deleteEmp() async {
-    final taskProvider = Provider.of<EmployeeProvider>(context, listen: false);
+    final empProvider = Provider.of<EmployeeProvider>(context, listen: false);
     try {
-      await taskProvider.deleteEmployee(
+      await empProvider.deleteEmployee(
         widget.employeeId,
       );
       ToastMessage().showSuccessMessage('Employee Deleted.');
@@ -64,6 +105,59 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       print(e);
       ToastMessage().showErrorMessage('Something went wrong.');
     }
+  }
+
+  Future updateEmp() async {
+    final empProvider = Provider.of<EmployeeProvider>(context, listen: false);
+    try {
+      await empProvider.editEmployee(
+          employeePasswordController.text,
+          employeeEmailIdController.text,
+          employeeJobPositionController.text,
+          employeeDepartmentController.text,
+          widget.team,
+          employeeIdController.text,
+          widget.docId,
+          employeeDOBController.text,
+          employeeCountryController.text,
+          employeeStateController.text,
+          employeeCityController.text,
+          employeeMobileController.text,
+          employeeHomeNumberController.text,
+          gender.name,
+          status.name,
+          employeeAddressController.text,
+          employeeIssueDateController.text);
+      ToastMessage().showSuccessMessage('Employee updated.');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+          (route) => false);
+    } catch (e) {
+      print(e);
+      ToastMessage().showErrorMessage('Something went wrong.');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    employeeIdController.text = widget.employeeId;
+    employeeJobPositionController.text = widget.employeePosition;
+    employeeDepartmentController.text = widget.employeeDept;
+    employeeEmailIdController.text = widget.employeeEmail;
+    employeePasswordController.text = widget.password;
+    employeeDOBController.text = widget.dob;
+    employeeCountryController.text = widget.country;
+    employeeCityController.text = widget.city;
+    employeeStateController.text = widget.state;
+    employeeMobileController.text = widget.mobile;
+    employeeHomeNumberController.text = widget.home;
+    employeeHomeNumberController.text = widget.home;
+    gender = widget.gender == 'Female' ? Gender.Female : Gender.Male;
+    status = widget.status == 'Yes' ? MaritalStatus.Yes : MaritalStatus.No;
+    employeeAddressController.text=widget.address;
+    employeeIssueDateController.text=widget.issueDate;
+    super.initState();
   }
 
   @override
@@ -141,9 +235,17 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                       ),
                       Container(
-                          child: Text(
-                        widget.employeeId,
-                      )),
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeIdController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -180,7 +282,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text(widget.employeePosition)),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeJobPositionController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -217,7 +330,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text(widget.employeeDept)),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeDepartmentController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -254,7 +378,34 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          readOnly: true,
+                          onTap: () async {
+                            var date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1947),
+                                lastDate: DateTime.now());
+
+                            if (date != null) {
+                              setState(() {
+                                String formatedDate =
+                                    DateFormat('dd-MM-yyyy').format(date);
+                                employeeDOBController.text = formatedDate;
+                              });
+                            }
+                          },
+                          controller: employeeDOBController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -291,7 +442,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("India")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeCountryController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -328,7 +490,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text(" ")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeStateController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -365,7 +538,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text(" ")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeCityController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -402,7 +586,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeMobileController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -439,7 +634,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text("")),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeHomeNumberController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -464,7 +670,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       Container(
                           width: 150,
                           child: Text(
-                            "Mail Id",
+                            "Mail ID",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           )),
@@ -476,7 +682,18 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w900),
                         ),
                       ),
-                      Container(child: Text(widget.employeeEmail)),
+                      Container(
+                        height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          controller: employeeEmailIdController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -680,9 +897,15 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                       ),
                       Container(
-                        width: 150,
-                        child: Text(
-                          "",
+                        // height: 40,
+                        width: 100,
+                        child: TextFormField(
+                          controller: employeeAddressController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
                         ),
                       ),
                     ],
@@ -741,9 +964,16 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                       ),
                       Container(
-                        width: 150,
-                        child: Text(
-                          "*******",
+                        // height: 40,
+                        width: 160,
+                        child: TextFormField(
+                          obscureText: true,
+                          controller: employeePasswordController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
                         ),
                       ),
                     ],
@@ -783,9 +1013,31 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                       ),
                       Container(
-                        width: 150,
-                        child: Text(
-                          "31/03/2006",
+                        // height: 40,
+                        width: 100,
+                        child: TextFormField(
+                          readOnly: true,
+                          onTap: () async {
+                            var date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1947),
+                                lastDate: DateTime.now());
+
+                            if (date != null) {
+                              setState(() {
+                                String formatedDate =
+                                DateFormat('dd-MM-yyyy').format(date);
+                                employeeIssueDateController.text = formatedDate;
+                              });
+                            }
+                          },
+                          controller: employeeIssueDateController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 11),
+                          ),
+                          style: TextStyle(fontSize: 14, color: blackColor),
                         ),
                       ),
                     ],
@@ -800,88 +1052,92 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    /*  (isLoading == true)
+                    (isEditLoading == true)
                         ? Container(
-                      height: 55,
-                      width:
-                      MediaQuery.of(context).size.width / 2 - 100,
-                      decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                        :*/
-                    InkWell(
-                      onTap: () {
-                        // if (formKey.currentState!.validate()) {
-                        //   setState(() {
-                        //     isLoading = true;
-                        //   });
-                        //   updateTask().then((value) {
-                        //     setState(() {
-                        //       isLoading = false;
-                        //     });
-                        //   });
-                        // }
-                      },
-                      child: Container(
-                        height: 55,
-                        width: MediaQuery.of(context).size.width / 2 - 100,
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            'Edit',
-                            style: TextStyle(color: whiteColor, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                     (isDeleteLoading == true)
-                        ? Container(
-                      height: 55,
-                      width:
-                      MediaQuery.of(context).size.width / 2 - 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: primaryColor,
-                          ),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: CircularProgressIndicator(color: primaryColor,),
-                      ),
-                    )
-                        :
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isDeleteLoading = true;
-                        });
-                        deleteEmp().then((value) {
-                          setState(() {
-                            isDeleteLoading = false;
-                          });
-                        });
-                      },
-                      child: Container(
-                        height: 55,
-                        width: MediaQuery.of(context).size.width / 2 - 100,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: primaryColor,
+                            height: 55,
+                            width: MediaQuery.of(context).size.width / 2 - 100,
+                            decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: whiteColor,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            'Delete',
-                            style: TextStyle(color: primaryColor, fontSize: 16),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              // if (formKey.currentState!.validate()) {
+                              setState(() {
+                                isEditLoading = true;
+                              });
+                              updateEmp().then((value) {
+                                setState(() {
+                                  isEditLoading = false;
+                                });
+                              });
+                              // }
+                            },
+                            child: Container(
+                              height: 55,
+                              width:
+                                  MediaQuery.of(context).size.width / 2 - 100,
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      color: whiteColor, fontSize: 16),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                    (isDeleteLoading == true)
+                        ? Container(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width / 2 - 100,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: primaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: primaryColor,
+                              ),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              setState(() {
+                                isDeleteLoading = true;
+                              });
+                              deleteEmp().then((value) {
+                                setState(() {
+                                  isDeleteLoading = false;
+                                });
+                              });
+                            },
+                            child: Container(
+                              height: 55,
+                              width:
+                                  MediaQuery.of(context).size.width / 2 - 100,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: primaryColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: primaryColor, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),

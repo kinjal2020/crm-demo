@@ -131,13 +131,13 @@ class _TaskScreenState extends State<TaskScreen> {
                                             snapshot.data![index].taskCode!,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                                fontSize: 14),
                                           ),
                                           Text(
                                             snapshot.data![index].taskName!,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500,
-                                                fontSize: 15),
+                                                fontSize: 12),
                                           ),
                                           Text(snapshot
                                               .data![index].managerName!),

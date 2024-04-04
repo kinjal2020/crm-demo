@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           centerTitle: true,
           automaticallyImplyLeading: false,
           title: Text(
-            'PayRoll',
+            'Profile',
             style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
           ),
           iconTheme: IconThemeData(color: whiteColor),

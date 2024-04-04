@@ -107,51 +107,51 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               leading: Icon(
                 CupertinoIcons.profile_circled,
-                color: grayColor,
+                color: blackColor,
               ),
               title: Text(
                 "Profile",
-                style: TextStyle(color: grayColor, fontWeight: FontWeight.w600),
+                style: TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
               leading: Icon(
                 Icons.lock,
-                color: grayColor,
+                color: blackColor,
               ),
               title: Text(
                 "Secret Locker",
-                style: TextStyle(color: grayColor, fontWeight: FontWeight.w600),
+                style: TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
               leading: Icon(
                 Icons.airplanemode_active,
-                color: grayColor,
+                color: blackColor,
               ),
               title: Text(
                 "Business Trip",
-                style: TextStyle(color: grayColor, fontWeight: FontWeight.w600),
+                style: TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
               leading: Icon(
                 CupertinoIcons.star_lefthalf_fill,
-                color: grayColor,
+                color: blackColor,
               ),
               title: Text(
                 "Rate",
-                style: TextStyle(color: grayColor, fontWeight: FontWeight.w600),
+                style: TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
               leading: Icon(
                 Icons.logout,
-                color: grayColor,
+                color: blackColor,
               ),
               title: Text(
                 "Log Out",
-                style: TextStyle(color: grayColor, fontWeight: FontWeight.w600),
+                style: TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             )
           ],
@@ -710,6 +710,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     onTap: () {
                                                       Navigator.of(context).push(MaterialPageRoute(
                                                           builder: (context) => EmployeeDetailsScreen(
+                                                              city: snapshot
+                                                                  .data![index].city!,
+                                                              country: snapshot
+                                                                  .data![index].country!,
+                                                              gender: snapshot
+                                                                  .data![index].gender!,
+                                                              status: snapshot
+                                                                  .data![index].status!,
+                                                              dob: snapshot.data![index].dob!,
+                                                              state: snapshot.data![index].state!,
+                                                              mobile: snapshot.data![index].mobile!,
+                                                              home: snapshot.data![index].home!,
+                                                              address:snapshot.data![index].address!,
+                                                              issueDate: snapshot.data![index].issueDate!,
+                                                              docId: snapshot
+                                                                  .data![index]
+                                                                  .docId!,
                                                               employeeFirstName:
                                                                   snapshot
                                                                       .data![
@@ -718,11 +735,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               employeeImage: snapshot
                                                                   .data![index]
                                                                   .employeeImage!,
-                                                              employeeLastName:
-                                                                  snapshot
-                                                                      .data![
-                                                                          index]
-                                                                      .employeeLastName!,
+                                                              employeeLastName: snapshot
+                                                                  .data![index]
+                                                                  .employeeLastName!,
                                                               employeeId: snapshot
                                                                   .data![index]
                                                                   .employeeId!,
