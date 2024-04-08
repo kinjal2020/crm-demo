@@ -34,7 +34,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
     try {
       await authProvider.createUser(
-          widget.email, confirmPasswordController.text, widget.phone);
+          widget.email, confirmPasswordController.text, widget.phone,widget.name);
       ToastMessage().showSuccessMessage('Registered Successfully');
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

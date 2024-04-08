@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
 import '../../../util/color.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
@@ -36,17 +37,26 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     final employeeProvider =
         Provider.of<EmployeeProvider>(context, listen: false);
 
-    await employeeProvider.addEmployee(
-        employeeFirstNameController.text,
-        employeeLastNameController.text,
-        imageFile!.path,
-        employeePasswordController.text,
-        employeeEmailIdController.text,
-        employeeJobPositionController.text,
-        employeeDepartmentController.text,
-        employeeTeamController.text,
-        employeeIdController.text);
+    try {
+      await employeeProvider.addEmployee(
+          employeeFirstNameController.text,
+          employeeLastNameController.text,
+          imageFile,
+          employeePasswordController.text,
+          employeeEmailIdController.text,
+          employeeJobPositionController.text,
+          employeeDepartmentController.text,
+          employeeTeamController.text,
+          employeeIdController.text);
+      ToastMessage().showSuccessMessage('Employee Added');
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => MyHomePage()),
+              (route) => false);
 
+    }  catch (e) {
+      // TODO
+    }
   }
 
   pickImage() async {
@@ -615,7 +625,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                   setState(() {
                                     isLoading = false;
                                   });
-                                  Navigator.of(context).pop();
+
                                 });
                               }
                             }

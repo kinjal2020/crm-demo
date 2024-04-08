@@ -28,8 +28,10 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   getData() async {
+    final authProvider =
+    Provider.of<AuthenticationProvider>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
-    role = pref.getString('role') ?? '';
+    authProvider.role = pref.getString('role') ?? '';
     setState(() {});
     print(role);
   }
@@ -60,7 +62,7 @@ class _TaskScreenState extends State<TaskScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: FutureBuilder(
-            future: (role == 'emp')
+            future: (authProvider.role == 'emp')
                 ? taskProvider
                     .getEmployeeTask(authProvider.doc!.docs[0].data()['team'])
                 : taskProvider.getTask(),
@@ -69,7 +71,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 return Center(child: CircularProgressIndicator());
               } else {
                 if (snapshot.data!.isNotEmpty) {
-                  if (role == 'emp') {
+                  if (authProvider.role == 'emp') {
                     return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
@@ -77,7 +79,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
-                                if (role == 'hr') {
+                                // if (role == 'hr') {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ManageTaskScreen(
                                             taskId:
@@ -100,7 +102,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                 .data![index].timeTaken!,
                                             index: index,
                                           )));
-                                }
+                                // }
                               },
                               child: Container(
                                 // height: 130,

@@ -24,6 +24,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
+          leading: IconButton(onPressed: () {
+            Navigator.of(context).pop();
+          },icon: Icon(CupertinoIcons.back),),
           title: Text(
             'Profile',
             style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),

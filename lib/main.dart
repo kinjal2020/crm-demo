@@ -1,5 +1,6 @@
 import 'package:carparking/Home/Employee/provider/employee_provider.dart';
 import 'package:carparking/Home/HomeScreen/home_screen.dart';
+import 'package:carparking/Home/Profile/provider/profile_provider.dart';
 import 'package:carparking/Home/Task/provider/task_provider.dart';
 import 'package:carparking/LeaveRequest/provider/leave_provider.dart';
 import 'package:carparking/ShiftDetails/screen/shift_details_screen.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => EmployeeProvider()),
         ChangeNotifierProvider(create: (context) => HolyDayProvider()),
         ChangeNotifierProvider(create: (context) => LeaveProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
       ],
       child: Consumer<AuthenticationProvider>(
           builder: (context, authProvider, child) {
@@ -78,9 +80,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  String role = '';
 
+  String role = '';
+  int _selectedIndex = 0;
+
+  List<Widget> _widgetOptions = <Widget>[];
   @override
   void initState() {
     // TODO: implement initState
@@ -96,14 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
       HomeScreen(),
       PayRollScreen(),
       (role == 'emp') ? ShiftDetailsScreen() : LeaveRequestScreen(),
-      ChatListScreen(),
+      (role == 'emp') ? ChatScreen(): ChatListScreen(),
     ];
   }
 
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  List<Widget> _widgetOptions = <Widget>[];
+
 
   void _onItemTapped(int index) {
     setState(() {

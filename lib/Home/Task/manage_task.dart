@@ -617,6 +617,7 @@ class _ManageTaskScreenState extends State<ManageTaskScreen> {
                     height: 5,
                   ),
                   TextFormField(
+                    readOnly: true,
                     controller: timeTakenController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(

@@ -1,7 +1,11 @@
+import 'package:carparking/Home/Profile/provider/profile_provider.dart';
+import 'package:carparking/util/toast_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../../Auth/provider/auth_provider.dart';
 import '../../../util/color.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
@@ -18,7 +22,62 @@ enum MaritalStatus { Yes, No }
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Gender gender = Gender.Male;
   MaritalStatus status = MaritalStatus.Yes;
-  TextEditingController requestDateController = TextEditingController();
+  TextEditingController empIdController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController homeAddressController = TextEditingController();
+  TextEditingController emergencyController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+
+  bool isLoading = false;
+  String docId = '';
+
+  updatePersonalInfo() async {
+    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    try {
+      await profileProvider.updatePersonalInfo(
+          gender.name,
+          status.name,
+          addressController.text,
+          phoneController.text,
+          homeAddressController.text,
+          emergencyController.text,
+          cityController.text,
+          stateController.text,
+          docId);
+      await authProvider.getLoginUserInfo();
+      ToastMessage().showSuccessMessage('Personal Info Updated');
+    } catch (e) {
+      // TODO
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    docId = authProvider.doc!.docs[0].id;
+    gender = authProvider.doc!.docs[0].data()['gender'] == 'Female'
+        ? Gender.Female
+        : Gender.Male;
+    status = authProvider.doc!.docs[0].data()['maritalStatus'] == 'Yes'
+        ? MaritalStatus.Yes
+        : MaritalStatus.No;
+    if (authProvider.role == 'emp') {
+      empIdController.text = authProvider.doc!.docs[0].data()['employeeId'];
+      addressController.text = authProvider.doc!.docs[0].data()['address'];
+      phoneController.text = authProvider.doc!.docs[0].data()['mobileNumber'];
+      homeAddressController.text =
+          authProvider.doc!.docs[0].data()['homeNumber'];
+      cityController.text = authProvider.doc!.docs[0].data()['city'];
+      stateController.text = authProvider.doc!.docs[0].data()['state'];
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,23 +120,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       width: 180,
                       child: TextFormField(
                         readOnly: true,
-                        onTap: () async {
-                          var date = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2050));
-                          if (date != null) {
-                            setState(() {
-                              String formatedDate =
-                                  DateFormat('dd-MM-yyyy').format(date);
-                              requestDateController.text = formatedDate;
-                              // var timeDate = endDate!.difference(startDate!).inDays;
-                              // timeTakenController.text = '$timeDate Days';
-                            });
-                          }
-                        },
-                        controller: requestDateController,
+                        controller: empIdController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -284,6 +327,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 100,
                       width: 160,
                       child: TextFormField(
+                        controller: addressController,
                         maxLines: 3,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -332,6 +376,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 40,
                       width: 160,
                       child: TextFormField(
+                        controller: phoneController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -364,7 +409,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     Container(
                         width: 150,
                         child: Text(
-                          "Home Address",
+                          "Home Number",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         )),
@@ -380,6 +425,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 100,
                       width: 160,
                       child: TextFormField(
+                        controller: homeAddressController,
                         maxLines: 3,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -428,6 +474,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 40,
                       width: 160,
                       child: TextFormField(
+                        controller: emergencyController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -476,6 +523,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: cityController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -523,6 +571,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: stateController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -539,33 +588,46 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40.0, right: 40),
-              child: InkWell(
-                onTap: () {
-                  // if (formKey.currentState!.validate()) {
-                  //   setState(() {
-                  //     isLoading = true;
-                  //   });
-                  //   updateTask().then((value) {
-                  //     setState(() {
-                  //       isLoading = false;
-                  //     });
-                  //   });
-                  // }
-                },
-                child: Container(
-                  height: 55,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      'Edit',
-                      style: TextStyle(color: whiteColor, fontSize: 16),
+              child: (isLoading == true)
+                  ? Container(
+                      height: 55,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: whiteColor,
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        // if (formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        updatePersonalInfo().then((value) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        });
+                        // }
+                      },
+                      child: Container(
+                        height: 55,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(color: whiteColor, fontSize: 16),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
             SizedBox(
               height: 10,

@@ -71,7 +71,7 @@ class TaskProvider with ChangeNotifier {
     var data = await FirebaseFirestore.instance
         .collection('Tasks')
         .where('currentStatus', isEqualTo: 'Pending')
-        .where('team', isEqualTo: team)
+        .where('assignTo', isEqualTo: team)
         .get();
     return data.docs.map((e) => TaskModel.fromDatabase(e)).toList();
   }

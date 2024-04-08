@@ -45,6 +45,7 @@ dependencies:
   firebase_auth:
   fluttertoast:
   cloud_firestore:
+  firebase_storage:
 
 
 dev_dependencies:

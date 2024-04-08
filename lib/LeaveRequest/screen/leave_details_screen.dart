@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Auth/provider/auth_provider.dart';
 import '../../util/color.dart';
 import '../../util/toast_message.dart';
 import '../provider/leave_provider.dart';
@@ -23,8 +24,10 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
   bool isRejectLoading = false;
 
   getData() async {
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: true);
     SharedPreferences pref = await SharedPreferences.getInstance();
-    role = pref.getString('role') ?? '';
+    authProvider.role = pref.getString('role') ?? '';
     setState(() {});
     print(role);
   }

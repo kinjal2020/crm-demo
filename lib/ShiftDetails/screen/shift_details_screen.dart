@@ -10,8 +10,40 @@ class ShiftDetailsScreen extends StatefulWidget {
 }
 
 class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
+  int date = 0;
+  String month = '';
+
+  List<String> days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    findFirstDateOfTheWeek(DateTime.now());
+    super.initState();
+  }
+
+  findFirstDateOfTheWeek(DateTime dateTime) {
+    var date = dateTime.subtract(Duration(days: dateTime.weekday - 1));
+    this.date = date.day;
+    // month = date.;
+  }
+
+  DateTime findLastDateOfTheWeek(DateTime dateTime) {
+    return dateTime
+        .add(Duration(days: DateTime.daysPerWeek - dateTime.weekday));
+  }
+
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -37,9 +69,9 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
                 height: 10,
               ),
               Container(
-                height: MediaQuery.of(context).size.height - 200,
+                height: height - 200,
                 child: ListView.builder(
-                    itemCount: 7,
+                    itemCount: 6,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -54,11 +86,9 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width:
-                                    (MediaQuery.of(context).size.width - 50) /
-                                        3,
+                                width: (width - 50) / 3,
                                 child: Text(
-                                  '06\n September',
+                                  '${date + index}\n April',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: grayColor),
                                 ),
@@ -72,11 +102,9 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
                                 ),
                               ),
                               Container(
-                                width:
-                                    (MediaQuery.of(context).size.width - 50) /
-                                        3,
+                                width: (width - 50) / 3,
                                 child: Text(
-                                  'Monday',
+                                  days[index],
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: grayColor),
                                 ),
@@ -90,9 +118,7 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
                                 ),
                               ),
                               Container(
-                                width:
-                                    (MediaQuery.of(context).size.width - 50) /
-                                        3,
+                                width: (width - 50) / 3,
                                 child: Text(
                                   'Morning Shift',
                                   textAlign: TextAlign.center,

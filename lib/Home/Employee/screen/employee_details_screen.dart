@@ -95,7 +95,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
     final empProvider = Provider.of<EmployeeProvider>(context, listen: false);
     try {
       await empProvider.deleteEmployee(
-        widget.employeeId,
+        widget.docId,
       );
       ToastMessage().showSuccessMessage('Employee Deleted.');
       Navigator.of(context).pushAndRemoveUntil(
@@ -191,7 +191,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: FileImage(File(widget.employeeImage)),
+                      backgroundImage: NetworkImage(widget.employeeImage),
                       backgroundColor: grayColor,
                     ),
                     Positioned(
@@ -898,8 +898,9 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       ),
                       Container(
                         // height: 40,
-                        width: 100,
+                        width: 160,
                         child: TextFormField(
+                          maxLines: 3,
                           controller: employeeAddressController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -1014,7 +1015,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                       ),
                       Container(
                         // height: 40,
-                        width: 100,
+                        width: 160,
                         child: TextFormField(
                           readOnly: true,
                           onTap: () async {

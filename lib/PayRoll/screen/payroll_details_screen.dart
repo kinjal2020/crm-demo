@@ -53,7 +53,7 @@ class _PayRollDetailScreenState extends State<PayRollDetailScreen> {
             },
             icon: Icon(CupertinoIcons.back)),
         title: Text(
-          'List of Employees',
+          widget.month,
           style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
         ),
         iconTheme: IconThemeData(color: whiteColor),

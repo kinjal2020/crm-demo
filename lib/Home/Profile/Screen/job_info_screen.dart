@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../../Auth/provider/auth_provider.dart';
 import '../../../util/color.dart';
 
 class JobInfoScreen extends StatefulWidget {
@@ -13,9 +15,34 @@ class JobInfoScreen extends StatefulWidget {
 
 class _JobInfoScreenState extends State<JobInfoScreen> {
   TextEditingController requestDateController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController positionController = TextEditingController();
+  TextEditingController departmentController = TextEditingController();
+  TextEditingController teamController = TextEditingController();
+  TextEditingController bloodGroupController = TextEditingController();
+  TextEditingController shiftController = TextEditingController();
+  TextEditingController daController = TextEditingController();
+  TextEditingController joiningDateController = TextEditingController();
+  TextEditingController workLocationController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+    nameController.text=authProvider.doc!.docs[0].data()['employeeFirstName'];
+    idController.text=authProvider.doc!.docs[0].data()['employeeId'];
+    if(authProvider.role=='emp'){
+      positionController.text=authProvider.doc!.docs[0].data()['jobPosition'];
+      teamController.text=authProvider.doc!.docs[0].data()['team'];
+      departmentController.text=authProvider.doc!.docs[0].data()['department'];
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var width=MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -52,8 +79,9 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                     ),
                     Container(
                       height: 40,
-                      width: 100,
+                        width: width/2-20,
                       child: TextFormField(
+                        controller: nameController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -99,8 +127,9 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                     ),
                     Container(
                       height: 40,
-                      width: 100,
+                      width: width/2-20,
                       child: TextFormField(
+                        controller: idController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -148,6 +177,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: positionController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -195,6 +225,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: departmentController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -242,6 +273,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: teamController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -289,6 +321,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: bloodGroupController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -336,6 +369,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: shiftController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -383,6 +417,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: daController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
@@ -496,6 +531,7 @@ class _JobInfoScreenState extends State<JobInfoScreen> {
                       height: 40,
                       width: 100,
                       child: TextFormField(
+                        controller: workLocationController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 9),
