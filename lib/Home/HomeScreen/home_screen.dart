@@ -24,6 +24,7 @@ import '../../LeaveRequest/widget/my_leave_screen.dart';
 import '../Employee/screen/employee_details_screen.dart';
 import '../Employee/model/employee_model.dart';
 import '../Employee/screen/employee_screen.dart';
+import '../Secret Locker/screen/secret_locker_screen.dart';
 import '../Task/manage_task.dart';
 import '../Task/provider/task_provider.dart';
 import 'model/holiday_model.dart';
@@ -184,6 +185,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
+              onTap: (){
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SecretLockerScreen()));
+              },
               leading: Icon(
                 Icons.lock,
                 color: blackColor,
@@ -236,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       appBar: AppBar(
         title: Text(
-          'Hello Connect',
+          'StaffSync',
           style: TextStyle(color: whiteColor, fontWeight: FontWeight.w400),
         ),
         actions: [
@@ -393,7 +399,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(
                               width: 100,
                               child: Text(
-                                authProvider.user!.email!,
+                                authProvider.doc!.docs[0]
+                                    .data()['employeeFirstName'],
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: blackColor,

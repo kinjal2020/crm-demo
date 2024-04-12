@@ -52,6 +52,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                                   builder: (context) => LeaveDetailsScreen(
                                         leaveModel: snapshot.data![index],
                                       )));
+
                               // }
                             },
                             child: Container(
@@ -137,7 +138,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
                 } else {
                   return Center(
                     child: Text(
-                      'No Task Available',
+                      'No Leave available',
                       style: TextStyle(color: Colors.grey),
                     ),
                   );

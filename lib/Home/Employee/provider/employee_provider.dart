@@ -9,8 +9,7 @@ import '../model/employee_model.dart';
 class EmployeeProvider with ChangeNotifier {
   addEmployee(firstName, lastName, empImage, password, emailId, position, dept,
       team, id) async {
-    var d =
-        await FirebaseStorage.instance.ref('users').child(id).putFile(empImage);
+    var d = await FirebaseStorage.instance.ref('users').child(id).putFile(empImage);
     String imageUrl = await d.ref.getDownloadURL();
 
     await FirebaseFirestore.instance.collection('employee').doc().set({

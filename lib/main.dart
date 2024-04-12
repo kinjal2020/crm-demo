@@ -1,6 +1,7 @@
 import 'package:carparking/Home/Employee/provider/employee_provider.dart';
 import 'package:carparking/Home/HomeScreen/home_screen.dart';
 import 'package:carparking/Home/Profile/provider/profile_provider.dart';
+import 'package:carparking/Home/Secret%20Locker/provider/secret_locker_provider.dart';
 import 'package:carparking/Home/Task/provider/task_provider.dart';
 import 'package:carparking/LeaveRequest/provider/leave_provider.dart';
 import 'package:carparking/ShiftDetails/screen/shift_details_screen.dart';
@@ -14,17 +15,7 @@ import 'Auth/provider/auth_provider.dart';
 import 'Chat/screen/chat_list_screen.dart';
 import 'Chat/screen/chat_screen.dart';
 import 'Home/HomeScreen/provider/holiday_provider.dart';
-import 'Home/Task/assign_task_screen.dart';
-import 'Home/Task/task_screen.dart';
-import 'Auth/choice_screen.dart';
-import 'Auth/welcome_screen.dart';
-import 'Auth/login/login_screen.dart';
-import 'Auth/signup/otp_verification_screen.dart';
-import 'Auth/signup/set_password_screen.dart';
-import 'Auth/signup/signup_screen.dart';
-import 'Home/Employee/screen/add_employee_screen.dart';
-import 'Home/Employee/screen/employee_details_screen.dart';
-import 'Home/Employee/screen/employee_screen.dart';
+
 import 'LeaveRequest/screen/leave_request_screen.dart';
 import 'PayRoll/screen/payroll_screen.dart';
 
@@ -53,18 +44,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HolyDayProvider()),
         ChangeNotifierProvider(create: (context) => LeaveProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => SecretLockerProvider()),
       ],
       child: Consumer<AuthenticationProvider>(
           builder: (context, authProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'StaffSync',
           theme: ThemeData(
             fontFamily: 'Gantari',
             colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
             useMaterial3: true,
           ),
-          // home: ChatScreen() ,
+          // home: SecretLockerScreen() ,
+
           home: authProvider.user == null ? IntroScreen() : MyHomePage(),
         );
       }),

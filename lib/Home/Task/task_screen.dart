@@ -190,7 +190,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
                               onTap: () {
-                                if (role == 'hr') {
+                                // if (authProvider.role == 'hr') {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ManageTaskScreen(
                                             taskId:
@@ -213,7 +213,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                 .data![index].timeTaken!,
                                             index: index,
                                           )));
-                                }
+                                // }
                               },
                               child: Container(
                                 // height: 130,
