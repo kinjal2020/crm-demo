@@ -29,6 +29,10 @@ class AuthenticationProvider with ChangeNotifier {
     });
   }
 
+  // AuthenticationProvider(){
+  //   getLoginUserInfo();
+  // }
+
   getLoginUserInfo() async {
     role == 'hr'
         ? doc = await FirebaseFirestore.instance

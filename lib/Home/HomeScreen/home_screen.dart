@@ -29,6 +29,9 @@ import '../Task/manage_task.dart';
 import '../Task/provider/task_provider.dart';
 import 'model/holiday_model.dart';
 
+String punchin = '';
+String punchout = '';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -38,6 +41,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
+
+  // var time;
 
   @override
   void initState() {
@@ -51,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
     final authProvider =
-    Provider.of<AuthenticationProvider>(context, listen: false);
+        Provider.of<AuthenticationProvider>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
     authProvider.role = pref.getString('role') ?? '';
     setState(() {});
@@ -74,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginScreen()), (
-                      route) => false);
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      (route) => false);
                 },
                 child: Container(
                   height: 40,
@@ -103,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               InkWell(
                 onTap: () {
-                 Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
                 child: Container(
                   height: 40,
@@ -132,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider =
-    Provider.of<AuthenticationProvider>(context, listen: true);
+        Provider.of<AuthenticationProvider>(context, listen: true);
     final empProvider = Provider.of<EmployeeProvider>(context, listen: true);
     final holiDayProvider = Provider.of<HolyDayProvider>(context, listen: true);
     final taskProvider = Provider.of<TaskProvider>(context, listen: true);
@@ -181,14 +186,14 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(
                 "Profile",
                 style:
-                TextStyle(color: blackColor, fontWeight: FontWeight.w600),
+                    TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
-              onTap: (){
+              onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SecretLockerScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SecretLockerScreen()));
               },
               leading: Icon(
                 Icons.lock,
@@ -197,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(
                 "Secret Locker",
                 style:
-                TextStyle(color: blackColor, fontWeight: FontWeight.w600),
+                    TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             // ListTile(
@@ -219,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(
                 "Rate",
                 style:
-                TextStyle(color: blackColor, fontWeight: FontWeight.w600),
+                    TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             ),
             ListTile(
@@ -234,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text(
                 "Log Out",
                 style:
-                TextStyle(color: blackColor, fontWeight: FontWeight.w600),
+                    TextStyle(color: blackColor, fontWeight: FontWeight.w600),
               ),
             )
           ],
@@ -257,968 +262,970 @@ class _HomeScreenState extends State<HomeScreen> {
           child: (isLoading == true)
               ? Center(child: CircularProgressIndicator())
               : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              (authProvider.role == 'emp')
-                  ? Container(
-                height: 80,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: secondaryColor.withOpacity(0.3)),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceAround,
-                      children: [
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundImage: NetworkImage(authProvider
-                              .doc!.docs[0]
-                              .data()['employeeImage']),
-                        ),
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              authProvider.doc!.docs[0]
-                                  .data()['employeeFirstName'],
-                              style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              authProvider.doc!.docs[0]
-                                  .data()['employeeId'],
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 12,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (authProvider.role == 'emp')
+                        ? Container(
+                            height: 80,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: secondaryColor.withOpacity(0.3)),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: NetworkImage(authProvider
+                                          .doc!.docs[0]
+                                          .data()['employeeImage']),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          authProvider.doc!.docs[0]
+                                              .data()['employeeFirstName'],
+                                          style: TextStyle(
+                                              color: blackColor,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Text(
+                                          authProvider.doc!.docs[0]
+                                              .data()['employeeId'],
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MyLeaveScreen(
+                                                      index: 0,
+                                                    )));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          color: primaryColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: primaryColor,
+                                              blurRadius: 1,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Apply Leave',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LeaveScreen()));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'My Leave',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400,
+                                              color: primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MyLeaveScreen(
-                                          index: 0,
-                                        )));
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 80,
+                          )
+                        : Container(
+                            height: 80,
+                            width: double.infinity,
                             decoration: BoxDecoration(
-                              color: primaryColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: primaryColor,
-                                  blurRadius: 1,
-                                ),
-                              ],
-                              borderRadius:
-                              BorderRadius.circular(8),
-                            ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: secondaryColor.withOpacity(0.3)),
                             child: Center(
-                              child: Text(
-                                'Apply Leave',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: whiteColor,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: NetworkImage(
+                                        authProvider.doc!.docs[0]
+                                            .data()['employeeImage'],
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          child: Text(
+                                            authProvider.doc!.docs[0]
+                                                .data()['employeeFirstName'],
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: blackColor,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                        Text(
+                                          'Human Resource',
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TaskScreen()));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          color: primaryColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: primaryColor,
+                                              blurRadius: 1,
+                                            ),
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Manage Task',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AssignTaskScreen()));
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'Assign Task',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400,
+                                              color: primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        LeaveScreen()));
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              border:
-                              Border.all(color: primaryColor),
-                              borderRadius:
-                              BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'My Leave',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                ),
-              )
-                  : Container(
-                height: 80,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: secondaryColor.withOpacity(0.3)),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceAround,
-                      children: [
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundImage: NetworkImage(
-                            authProvider.doc!.docs[0]
-                                .data()['employeeImage'],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 100,
-                              child: Text(
-                                authProvider.doc!.docs[0]
-                                    .data()['employeeFirstName'],
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
+                    (authProvider.role == 'emp')
+                        ? Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Upcoming Task',
+                                    style: TextStyle(
+                                        color: blackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TaskScreen()));
+                                    },
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Text(
-                              'Human Resource',
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 12,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        TaskScreen()));
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: primaryColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: primaryColor,
-                                  blurRadius: 1,
-                                ),
-                              ],
-                              borderRadius:
-                              BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Manage Task',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: whiteColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AssignTaskScreen()));
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              border:
-                              Border.all(color: primaryColor),
-                              borderRadius:
-                              BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Assign Task',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              (authProvider.role == 'emp')
-                  ? Column(
-                children: [
-                  Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Upcoming Task',
-                        style: TextStyle(
-                            color: blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TaskScreen()));
-                        },
-                        child: Text(
-                          'View All',
-                          style: TextStyle(
-                              color: blackColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                      height: 120,
-                      width: double.infinity,
-                      child: FutureBuilder(
-                          future: taskProvider.getEmployeeTask(
-                              authProvider.doc!.docs[0]
-                                  .data()['team']),
-                          builder: (context,
-                              AsyncSnapshot<List<TaskModel>>
-                              snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                  child:
-                                  CircularProgressIndicator());
-                            } else {
-                              if (snapshot.data!.isNotEmpty) {
-                                return ListView.builder(
-                                    scrollDirection:
-                                    Axis.horizontal,
-                                    itemCount:
-                                    snapshot.data!.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                        const EdgeInsets.all(
-                                            8.0),
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder:
-                                                        (context) =>
-                                                        ManageTaskScreen(
-                                                          taskId: snapshot
-                                                              .data![index]
-                                                              .taskId!,
-                                                          taskName: snapshot
-                                                              .data![index]
-                                                              .taskName!,
-                                                          taskCode: snapshot
-                                                              .data![index]
-                                                              .taskCode!,
-                                                          assignTo: snapshot
-                                                              .data![index]
-                                                              .assignTo!,
-                                                          managerName: snapshot
-                                                              .data![index]
-                                                              .managerName!,
-                                                          currentStatus: snapshot
-                                                              .data![index]
-                                                              .currentStatus!,
-                                                          assignDate: snapshot
-                                                              .data![index]
-                                                              .assignDate!,
-                                                          endDate: snapshot
-                                                              .data![index]
-                                                              .endDate!,
-                                                          timeTaken: snapshot
-                                                              .data![index]
-                                                              .timeTaken!,
-                                                          index:
-                                                          index,
-                                                        )));
-                                          },
-                                          child: Container(
-                                            // height: 130,
-                                            width: 270,
-                                            decoration: BoxDecoration(
-                                                color: whiteColor,
-                                                borderRadius:
-                                                BorderRadius
-                                                    .circular(
-                                                    5),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: secondaryColor
-                                                          .withOpacity(
-                                                          0.2),
-                                                      spreadRadius:
-                                                      0.2,
-                                                      blurRadius: 9)
-                                                ]),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets
-                                                  .all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceAround,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .center,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        snapshot
-                                                            .data![
-                                                        index]
-                                                            .taskCode!,
-                                                        style: TextStyle(
-                                                            color:
-                                                            blackColor,
-                                                            fontSize:
-                                                            16,
-                                                            fontWeight:
-                                                            FontWeight.bold),
-                                                      ),
-                                                      Text(
-                                                        snapshot
-                                                            .data![
-                                                        index]
-                                                            .taskName!,
-                                                        style: TextStyle(
-                                                          // color: grayColor,
-                                                            fontSize: 15,
-                                                            fontWeight: FontWeight
-                                                                .w500),
-                                                      ),
-                                                      Text(
-                                                        snapshot
-                                                            .data![
-                                                        index]
-                                                            .managerName!,
-                                                        style: TextStyle(
-                                                          // color: grayColor,
-                                                            fontSize: 12,
-                                                            fontWeight: FontWeight
-                                                                .w500),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 8,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .start,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .end,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Container(
+                              Container(
+                                  height: 120,
+                                  width: double.infinity,
+                                  child: FutureBuilder(
+                                      future: taskProvider.getEmployeeTask(
+                                          authProvider.doc!.docs[0]
+                                              .data()['team']),
+                                      builder: (context,
+                                          AsyncSnapshot<List<TaskModel>>
+                                              snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else {
+                                          if (snapshot.data!.isNotEmpty) {
+                                            return ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    snapshot.data!.length,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        Navigator.of(context).push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ManageTaskScreen(
+                                                                          taskId: snapshot
+                                                                              .data![index]
+                                                                              .taskId!,
+                                                                          taskName: snapshot
+                                                                              .data![index]
+                                                                              .taskName!,
+                                                                          taskCode: snapshot
+                                                                              .data![index]
+                                                                              .taskCode!,
+                                                                          assignTo: snapshot
+                                                                              .data![index]
+                                                                              .assignTo!,
+                                                                          managerName: snapshot
+                                                                              .data![index]
+                                                                              .managerName!,
+                                                                          currentStatus: snapshot
+                                                                              .data![index]
+                                                                              .currentStatus!,
+                                                                          assignDate: snapshot
+                                                                              .data![index]
+                                                                              .assignDate!,
+                                                                          endDate: snapshot
+                                                                              .data![index]
+                                                                              .endDate!,
+                                                                          timeTaken: snapshot
+                                                                              .data![index]
+                                                                              .timeTaken!,
+                                                                          index:
+                                                                              index,
+                                                                        )));
+                                                      },
+                                                      child: Container(
+                                                        // height: 130,
+                                                        width: 270,
                                                         decoration: BoxDecoration(
-                                                            color:
-                                                            errorColor,
+                                                            color: whiteColor,
                                                             borderRadius:
-                                                            BorderRadius
-                                                                .circular(20)),
-                                                        child:
-                                                        Padding(
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: secondaryColor
+                                                                      .withOpacity(
+                                                                          0.2),
+                                                                  spreadRadius:
+                                                                      0.2,
+                                                                  blurRadius: 9)
+                                                            ]),
+                                                        child: Padding(
                                                           padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
-                                                          child:
-                                                          Text(
-                                                            snapshot
-                                                                .data![index]
-                                                                .currentStatus!,
-                                                            style: TextStyle(
-                                                                color:
-                                                                whiteColor,
-                                                                fontSize:
-                                                                12),
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Text(
+                                                                    snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .taskCode!,
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            blackColor,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  Text(
+                                                                    snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .taskName!,
+                                                                    style: TextStyle(
+                                                                        // color: grayColor,
+                                                                        fontSize: 15,
+                                                                        fontWeight: FontWeight.w500),
+                                                                  ),
+                                                                  Text(
+                                                                    snapshot
+                                                                        .data![
+                                                                            index]
+                                                                        .managerName!,
+                                                                    style: TextStyle(
+                                                                        // color: grayColor,
+                                                                        fontSize: 12,
+                                                                        fontWeight: FontWeight.w500),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 8,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                        color:
+                                                                            errorColor,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20)),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              5.0),
+                                                                      child:
+                                                                          Text(
+                                                                        snapshot
+                                                                            .data![index]
+                                                                            .currentStatus!,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                whiteColor,
+                                                                            fontSize:
+                                                                                12),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Text(
+                                                                    'Due by - ${snapshot.data![index].endDate!}',
+                                                                    style: TextStyle(
+                                                                        color:
+                                                                            grayColor,
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        'Due by - ${snapshot
-                                                            .data![index]
-                                                            .endDate!}',
-                                                        style: TextStyle(
-                                                            color:
-                                                            grayColor,
-                                                            fontSize:
-                                                            12,
-                                                            fontWeight:
-                                                            FontWeight.w500),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                    ),
+                                                  );
+                                                });
+                                          } else {
+                                            return Center(
+                                              child: Text(
+                                                'No Task Available',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
                                               ),
+                                            );
+                                          }
+                                        }
+                                      })),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Employee Details',
+                                    style: TextStyle(
+                                        color: blackColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EmployeeScreen(
+                                                    index: 0,
+                                                  )));
+                                    },
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                height: 150,
+                                width: double.infinity,
+                                child: FutureBuilder(
+                                    future: empProvider.getEmployees(),
+                                    builder: (context,
+                                        AsyncSnapshot<List<EmployeeModel>>
+                                            snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      } else {
+                                        print(snapshot.data);
+                                        if (snapshot.data!.isNotEmpty) {
+                                          return ListView.builder(
+                                              itemCount:
+                                                  snapshot.data!.length >= 3
+                                                      ? 3
+                                                      : snapshot.data!.length,
+                                              scrollDirection: Axis.horizontal,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                          builder: (context) => EmployeeDetailsScreen(
+                                                              city: snapshot
+                                                                  .data![index]
+                                                                  .city!,
+                                                              country: snapshot
+                                                                  .data![index]
+                                                                  .country!,
+                                                              gender: snapshot
+                                                                  .data![index]
+                                                                  .gender!,
+                                                              status: snapshot
+                                                                  .data![index]
+                                                                  .status!,
+                                                              dob: snapshot
+                                                                  .data![index]
+                                                                  .dob!,
+                                                              state: snapshot
+                                                                  .data![index]
+                                                                  .state!,
+                                                              mobile: snapshot
+                                                                  .data![index]
+                                                                  .mobile!,
+                                                              home: snapshot
+                                                                  .data![index]
+                                                                  .home!,
+                                                              address: snapshot
+                                                                  .data![index]
+                                                                  .address!,
+                                                              issueDate: snapshot
+                                                                  .data![index]
+                                                                  .issueDate!,
+                                                              docId: snapshot
+                                                                  .data![index]
+                                                                  .docId!,
+                                                              employeeFirstName: snapshot
+                                                                  .data![index]
+                                                                  .employeeFirstName!,
+                                                              employeeImage: snapshot
+                                                                  .data![index]
+                                                                  .employeeImage!,
+                                                              employeeLastName: snapshot
+                                                                  .data![index]
+                                                                  .employeeLastName!,
+                                                              employeeId: snapshot
+                                                                  .data![index]
+                                                                  .employeeId!,
+                                                              employeeDept: snapshot.data![index].employeeDept!,
+                                                              employeePunchIn: snapshot.data![index].employeePunchIn!,
+                                                              team: snapshot.data![index].team!,
+                                                              password: snapshot.data![index].password!,
+                                                              employeeEmail: snapshot.data![index].employeeEmail!,
+                                                              employeePosition: snapshot.data![index].employeePosition!)));
+                                                    },
+                                                    child: Container(
+                                                      height: 130,
+                                                      width: 250,
+                                                      decoration: BoxDecoration(
+                                                          color: whiteColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: secondaryColor
+                                                                    .withOpacity(
+                                                                        0.2),
+                                                                spreadRadius:
+                                                                    0.2,
+                                                                blurRadius: 9)
+                                                          ]),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 45,
+                                                              backgroundImage:
+                                                                  NetworkImage(snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .employeeImage!),
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .employeeFirstName!,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 8,
+                                                                ),
+                                                                Text(
+                                                                  snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .employeePosition!,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          grayColor,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 8,
+                                                                ),
+                                                                Text(
+                                                                  snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .employeeDept!,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          grayColor,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 8,
+                                                                ),
+                                                                Text(
+                                                                  'Punch In - ${snapshot.data![index].employeePunchIn!} AM',
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          grayColor,
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        } else {
+                                          return Center(
+                                            child: Text(
+                                              'No Employees Available',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
                                             ),
+                                          );
+                                        }
+                                      }
+                                    }),
+                              ),
+                            ],
+                          ),
+                    (authProvider.role == 'emp')
+                        ? Container()
+                        : Column(
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 40.0, right: 40),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddEmployeeScreen()));
+                                  },
+                                  child: Container(
+                                    height: 55,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: Center(
+                                      child: Text(
+                                        '+  Add New Employee',
+                                        style: TextStyle(
+                                            color: whiteColor, fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Attendance Details',
+                          style: TextStyle(
+                              color: blackColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18),
+                        ),
+                        (authProvider.role == 'emp')
+                            ? Text(
+                                'View Details',
+                                style: TextStyle(
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15),
+                              )
+                            : Text(
+                                'View Employee',
+                                style: TextStyle(
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15),
+                              ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: secondaryColor.withOpacity(0.3)),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Punch in',
+                                    style: TextStyle(
+                                        color: primaryColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  (punchin != '')
+                                      ? Text(punchin)
+                                      : Text(
+                                          '__:__',
+                                          style: TextStyle(
+                                            color: primaryColor,
+                                            fontSize: 12,
                                           ),
+                                        ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Punch Out',
+                                    style: TextStyle(
+                                        color: primaryColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  (punchout != '')
+                                      ? Text(punchout)
+                                      : Text(
+                                          '__:__',
+                                          style: TextStyle(
+                                            color: primaryColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  var time = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now());
+                                  print(time);
+                                  final time1 =
+                                      MaterialLocalizations.of(context);
+                                  if (punchin != '') {
+                                    setState(() {
+                                      punchout = time1.formatTimeOfDay(time!);
+                                    });
+                                  } else {
+                                    setState(() {
+                                      punchin = time1.formatTimeOfDay(time!);
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    color: primaryColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: primaryColor,
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.login_outlined,
+                                        color: whiteColor,
+                                      ),
+                                      Text(
+                                        'Punch in',
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: whiteColor,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Upcoming Holidays',
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 150,
+                      width: double.infinity,
+                      child: FutureBuilder(
+                          future: holiDayProvider.getHoliDayList(),
+                          builder: (context,
+                              AsyncSnapshot<List<HolidayModel>> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else {
+                              if (snapshot.data!.isNotEmpty) {
+                                return ListView.builder(
+                                    itemCount: snapshot.data!.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 130,
+                                          width: 270,
+                                          decoration: BoxDecoration(
+                                              color: whiteColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(snapshot
+                                                      .data![index]
+                                                      .holidayImage!),
+                                                  fit: BoxFit.fitWidth),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: secondaryColor
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 0.2,
+                                                    blurRadius: 9)
+                                              ]),
                                         ),
                                       );
                                     });
                               } else {
                                 return Center(
                                   child: Text(
-                                    'No Task Available',
-                                    style: TextStyle(
-                                        color: Colors.grey),
+                                    'No Upcoming Holidays',
+                                    style: TextStyle(color: Colors.grey),
                                   ),
                                 );
                               }
                             }
-                          })),
-                ],
-              )
-                  : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Employee Details',
-                        style: TextStyle(
-                            color: blackColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      EmployeeScreen(
-                                        index: 0,
-                                      )));
-                        },
-                        child: Text(
-                          'View All',
-                          style: TextStyle(
-                              color: blackColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 150,
-                    width: double.infinity,
-                    child: FutureBuilder(
-                        future: empProvider.getEmployees(),
-                        builder: (context,
-                            AsyncSnapshot<List<EmployeeModel>>
-                            snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                                child: CircularProgressIndicator());
-                          } else {
-                            print(snapshot.data);
-                            if (snapshot.data!.isNotEmpty) {
-                              return ListView.builder(
-                                  itemCount:
-                                  snapshot.data!.length >= 3
-                                      ? 3
-                                      : snapshot.data!.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                      const EdgeInsets.all(8.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EmployeeDetailsScreen(
-                                                          city: snapshot
-                                                              .data![index]
-                                                              .city!,
-                                                          country: snapshot
-                                                              .data![index]
-                                                              .country!,
-                                                          gender: snapshot
-                                                              .data![index]
-                                                              .gender!,
-                                                          status: snapshot
-                                                              .data![index]
-                                                              .status!,
-                                                          dob: snapshot
-                                                              .data![index]
-                                                              .dob!,
-                                                          state: snapshot
-                                                              .data![index]
-                                                              .state!,
-                                                          mobile: snapshot
-                                                              .data![index]
-                                                              .mobile!,
-                                                          home: snapshot
-                                                              .data![index]
-                                                              .home!,
-                                                          address: snapshot
-                                                              .data![index]
-                                                              .address!,
-                                                          issueDate: snapshot
-                                                              .data![index]
-                                                              .issueDate!,
-                                                          docId: snapshot
-                                                              .data![index]
-                                                              .docId!,
-                                                          employeeFirstName: snapshot
-                                                              .data![index]
-                                                              .employeeFirstName!,
-                                                          employeeImage: snapshot
-                                                              .data![index]
-                                                              .employeeImage!,
-                                                          employeeLastName: snapshot
-                                                              .data![index]
-                                                              .employeeLastName!,
-                                                          employeeId: snapshot
-                                                              .data![index]
-                                                              .employeeId!,
-                                                          employeeDept: snapshot
-                                                              .data![index]
-                                                              .employeeDept!,
-                                                          employeePunchIn: snapshot
-                                                              .data![index]
-                                                              .employeePunchIn!,
-                                                          team: snapshot
-                                                              .data![index]
-                                                              .team!,
-                                                          password: snapshot
-                                                              .data![index]
-                                                              .password!,
-                                                          employeeEmail: snapshot
-                                                              .data![index]
-                                                              .employeeEmail!,
-                                                          employeePosition: snapshot
-                                                              .data![index]
-                                                              .employeePosition!)));
-                                        },
-                                        child: Container(
-                                          height: 130,
-                                          width: 250,
-                                          decoration: BoxDecoration(
-                                              color: whiteColor,
-                                              borderRadius:
-                                              BorderRadius
-                                                  .circular(5),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: secondaryColor
-                                                        .withOpacity(
-                                                        0.2),
-                                                    spreadRadius:
-                                                    0.2,
-                                                    blurRadius: 9)
-                                              ]),
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets
-                                                .all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceAround,
-                                              children: [
-                                                CircleAvatar(
-                                                  radius: 45,
-                                                  backgroundImage:
-                                                  NetworkImage(snapshot
-                                                      .data![
-                                                  index]
-                                                      .employeeImage!),
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    Text(
-                                                      snapshot
-                                                          .data![
-                                                      index]
-                                                          .employeeFirstName!,
-                                                      style: TextStyle(
-                                                          color:
-                                                          blackColor,
-                                                          fontSize:
-                                                          16,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .bold),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    Text(
-                                                      snapshot
-                                                          .data![
-                                                      index]
-                                                          .employeePosition!,
-                                                      style: TextStyle(
-                                                          color:
-                                                          grayColor,
-                                                          fontSize:
-                                                          12,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w500),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    Text(
-                                                      snapshot
-                                                          .data![
-                                                      index]
-                                                          .employeeDept!,
-                                                      style: TextStyle(
-                                                          color:
-                                                          grayColor,
-                                                          fontSize:
-                                                          12,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w500),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    Text(
-                                                      'Punch In - ${snapshot
-                                                          .data![index]
-                                                          .employeePunchIn!} AM',
-                                                      style: TextStyle(
-                                                          color:
-                                                          grayColor,
-                                                          fontSize:
-                                                          12,
-                                                          fontWeight:
-                                                          FontWeight
-                                                              .w500),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  });
-                            } else {
-                              return Center(
-                                child: Text(
-                                  'No Employees Available',
-                                  style:
-                                  TextStyle(color: Colors.grey),
-                                ),
-                              );
-                            }
-                          }
-                        }),
-                  ),
-                ],
-              ),
-              (authProvider.role == 'emp')
-                  ? Container()
-                  : Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 40.0, right: 40),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    AddEmployeeScreen()));
-                      },
-                      child: Container(
-                        height: 55,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius:
-                            BorderRadius.circular(30)),
-                        child: Center(
-                          child: Text(
-                            '+  Add New Employee',
-                            style: TextStyle(
-                                color: whiteColor, fontSize: 16),
-                          ),
-                        ),
-                      ),
+                          }),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Attendance Details',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18),
-                  ),
-                  (authProvider.role == 'emp')
-                      ? Text(
-                    'View Details',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15),
-                  )
-                      : Text(
-                    'View Employee',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 80,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: secondaryColor.withOpacity(0.3)),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Punch in',
-                              style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              '__:__',
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Punch Out',
-                              style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              '__:__',
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: primaryColor,
-                                blurRadius: 1,
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.login_outlined,
-                                color: whiteColor,
-                              ),
-                              Text(
-                                'Punch in',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: whiteColor,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Upcoming Holidays',
-                style: TextStyle(
-                    color: primaryColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 150,
-                width: double.infinity,
-                child: FutureBuilder(
-                    future: holiDayProvider.getHoliDayList(),
-                    builder: (context,
-                        AsyncSnapshot<List<HolidayModel>> snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else {
-                        if (snapshot.data!.isNotEmpty) {
-                          return ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 130,
-                                    width: 270,
-                                    decoration: BoxDecoration(
-                                        color: whiteColor,
-                                        borderRadius:
-                                        BorderRadius.circular(5),
-                                        image: DecorationImage(
-                                            image: NetworkImage(snapshot
-                                                .data![index]
-                                                .holidayImage!),
-                                            fit: BoxFit.fitWidth),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: secondaryColor
-                                                  .withOpacity(0.2),
-                                              spreadRadius: 0.2,
-                                              blurRadius: 9)
-                                        ]),
-                                  ),
-                                );
-                              });
-                        } else {
-                          return Center(
-                            child: Text(
-                              'No Upcoming Holidays',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          );
-                        }
-                      }
-                    }),
-              ),
-            ],
-          ),
         ),
       ),
     );

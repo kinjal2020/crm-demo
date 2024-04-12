@@ -40,8 +40,11 @@ class _SecretLockerScreenState extends State<SecretLockerScreen> {
   saveDocument() async {
     final secretLockerProvider =
         Provider.of<SecretLockerProvider>(context, listen: false);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     try {
-      await secretLockerProvider.addDocument(name, dropDownValue, doc);
+      await secretLockerProvider.addDocument(
+          name, dropDownValue, doc, authProvider);
       Navigator.of(context).pop();
     } catch (e) {
       // TODO
@@ -143,6 +146,7 @@ class _SecretLockerScreenState extends State<SecretLockerScreen> {
                               )
                             : InkWell(
                                 onTap: () async {
+                                  print('wrsdvjkn');
                                   setState(() {
                                     isLoading = true;
                                   });
@@ -182,6 +186,8 @@ class _SecretLockerScreenState extends State<SecretLockerScreen> {
   Widget build(BuildContext context) {
     final secretLockerProvider =
         Provider.of<SecretLockerProvider>(context, listen: true);
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -201,35 +207,91 @@ class _SecretLockerScreenState extends State<SecretLockerScreen> {
       ),
       body: Center(
         child: FutureBuilder(
-          future: secretLockerProvider.getDocument(),
+          future: secretLockerProvider.getDocument(authProvider),
           builder: (BuildContext context,
               AsyncSnapshot<List<SecretLockerModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             } else {
-           if(snapshot.hasError){
-             return Text(snapshot.hasData.toString());
-           }
-              else if (snapshot.data!.isEmpty) {
+              if (snapshot.hasError) {
+                return Text(snapshot.hasData.toString());
+              } else if (snapshot.data!.isEmpty) {
                 return Center(
                   child: Text('Secret Locker is Empty'),
                 );
               } else {
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Column(
-                        children: [
-                          Image.network(snapshot.data![index].document!),
-                        ],
-                      ),
-                    );
-                  },
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(
+                                  child: Container(
+                                    height: 300,
+                                    child: Image.network(
+                                        snapshot.data![index].document!),
+                                  ),
+                                );
+                              });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: grayColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                (snapshot.data![index].categoryName! ==
+                                        "Aadhar Card")
+                                    ? Image.network(
+                                        'https://cdn.iconscout.com/icon/free/png-256/free-aadhaar-2085055-1747945.png',
+                                        height: 50,
+                                      )
+                                    : (snapshot.data![index].categoryName! ==
+                                            "Voter Id card")
+                                        ? Image.network(
+                                            'https://egov.eletsonline.com/wp-content/uploads/2018/08/election-commission-of-india-logo-324FF87C0E-seeklogo.com_.png',
+                                            height: 50,
+                                          )
+                                        : (snapshot.data![index]
+                                                    .categoryName! ==
+                                                "Pan Card")
+                                            ? Image.network(
+                                                'https://www.taxreturnwala.com/wp-content/uploads/2016/09/Is-It-Mandatory-To-Have-Pan-Number-For-The-Indian-Citizens-699x445.jpg',
+                                                height: 50,
+                                              )
+                                            : (snapshot.data![index]
+                                                        .categoryName! ==
+                                                    "Marksheet")
+                                                ? Image.network(
+                                                    'https://lh3.googleusercontent.com/SPID4pLSKPKdBJsUzUGKtTCgmd0T6uIx3c93Rsda-42FeNI4OcOzEhycMSThHC7CIR-D',
+                                                    height: 50,
+                                                  )
+                                                : Image.network(
+                                                    'https://iconape.com/wp-content/files/hq/258511/png/258511.png',
+                                                    height: 50,
+                                                  ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(snapshot.data![index].categoryName!)
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10),
+                  ),
                 );
               }
             }
