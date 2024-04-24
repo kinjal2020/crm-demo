@@ -1,3 +1,4 @@
+import 'package:carparking/Chat/provider/chat_provider.dart';
 import 'package:carparking/Home/Employee/provider/employee_provider.dart';
 import 'package:carparking/Home/HomeScreen/home_screen.dart';
 import 'package:carparking/Home/Profile/provider/profile_provider.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LeaveProvider()),
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => SecretLockerProvider()),
+        ChangeNotifierProvider(create: (context) => ChatProvider()),
       ],
       child: Consumer<AuthenticationProvider>(
           builder: (context, authProvider, child) {
@@ -73,11 +75,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   String role = '';
   int _selectedIndex = 0;
 
   List<Widget> _widgetOptions = <Widget>[];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -85,19 +87,36 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else {
+      return "$user2$user1";
+    }
+  }
+
   getData() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     role = pref.getString('role') ?? '';
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
+    await authProvider.getLoginUserInfo();
+    String room =
+        chatRoomId(authProvider.doc!.docs[0]['employeeFirstName'], 'tester');
     setState(() {});
     _widgetOptions = [
       HomeScreen(),
       PayRollScreen(),
       (role == 'emp') ? ShiftDetailsScreen() : LeaveRequestScreen(),
-      (role == 'emp') ? ChatScreen(): ChatListScreen(),
+      (role == 'emp')
+          ? ChatScreen(
+              empName: 'HR',
+              chatRoomId: room,
+            )
+          : ChatListScreen(),
     ];
   }
-
-
 
   void _onItemTapped(int index) {
     setState(() {

@@ -88,7 +88,7 @@ class _ShiftDetailsScreenState extends State<ShiftDetailsScreen> {
                               Container(
                                 width: (width - 50) / 3,
                                 child: Text(
-                                  '${date + index}\n April',
+                                  '${date + index}\n May',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: grayColor),
                                 ),

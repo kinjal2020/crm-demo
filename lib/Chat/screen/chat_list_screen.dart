@@ -1,3 +1,4 @@
+import 'package:carparking/Auth/provider/auth_provider.dart';
 import 'package:carparking/Chat/screen/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,8 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+        Provider.of<AuthenticationProvider>(context, listen: false);
     final empProvider = Provider.of<EmployeeProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
@@ -42,8 +45,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
+                          String roomId = chatRoomId(
+                              authProvider.doc!.docs[0]['employeeFirstName'],
+                              snapshot.data![index].employeeFirstName!);
+
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ChatScreen()));
+                              builder: (context) => ChatScreen(
+                                    empName: snapshot
+                                        .data![index].employeeFirstName!,
+                                    chatRoomId: roomId,
+                                  )));
                         },
                         child: ListTile(
                           leading: CircleAvatar(
@@ -78,5 +89,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
             }
           }),
     );
+  }
+
+  String chatRoomId(String user1, String user2) {
+    if (user1[0].toLowerCase().codeUnits[0] >
+        user2.toLowerCase().codeUnits[0]) {
+      return "$user1$user2";
+    } else {
+      return "$user2$user1";
+    }
   }
 }

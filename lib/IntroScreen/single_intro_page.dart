@@ -34,10 +34,13 @@ class _SingleIntroScreenState extends State<SingleIntroScreen> {
                   width: double.infinity,
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child:
-                    Image.asset(widget.image, height: 350, fit: BoxFit.contain),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child:
+                      Image.asset(widget.image, height: 350, fit: BoxFit.contain),
+                ),
               ),
             ],
           ),

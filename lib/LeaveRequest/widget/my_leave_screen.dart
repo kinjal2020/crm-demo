@@ -45,11 +45,10 @@ class _MyLeaveScreenState extends State<MyLeaveScreen> {
 
   sendLeave() async {
     final authProvider =
-    Provider.of<AuthenticationProvider>(context, listen: true);
+    Provider.of<AuthenticationProvider>(context, listen: false);
     final leaveProvider = Provider.of<LeaveProvider>(context, listen: false);
     try {
       await leaveProvider.applyLeave(
-          authProvider.doc!.docs[0]['employeeFirstName'],
           employeeIdController.text,
           employeePositionController.text,
           requestDateController.text,
@@ -57,7 +56,8 @@ class _MyLeaveScreenState extends State<MyLeaveScreen> {
           reasonController.text,
           fromDateController.text,
           toDateController.text,
-          totalDaysController.text);
+          totalDaysController.text,
+        authProvider.doc!.docs[0]['employeeFirstName'],);
       ToastMessage().showSuccessMessage('Leave Applied');
       Navigator.of(context).pop();
     } catch (e) {

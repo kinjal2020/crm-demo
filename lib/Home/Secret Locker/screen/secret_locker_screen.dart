@@ -9,7 +9,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../../../util/color.dart';
 
@@ -226,18 +229,20 @@ class _SecretLockerScreenState extends State<SecretLockerScreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  child: Container(
-                                    height: 300,
-                                    child: Image.network(
-                                        snapshot.data![index].document!),
-                                  ),
-                                );
-                              });
+                        onTap: () async {
+                          final netImage = await networkImage(
+                              snapshot.data![index].document!);
+                          final pdf = pw.Document();
+                          pdf.addPage(pw.Page(
+                              pageFormat: PdfPageFormat.a4,
+                              build: (pw.Context context) {
+                                return pw.Center(
+                                  child: pw.Image(netImage),
+                                ); // Center
+                              }));
+                          await Printing.layoutPdf(
+                              onLayout: (PdfPageFormat format) async =>
+                                  pdf.save());
                         },
                         child: Container(
                           decoration: BoxDecoration(

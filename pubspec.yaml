@@ -47,6 +47,8 @@ dependencies:
   cloud_firestore:
   firebase_storage:
   file_picker:
+  pdf:
+  printing:
 
 
 dev_dependencies:

@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     authProvider.role = pref.getString('role') ?? '';
     setState(() {});
 
-    await authProvider.getLoginUserInfo();
+
     setState(() {
       isLoading = false;
     });
@@ -370,6 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
+
                                   ],
                                 ),
                               ),
@@ -1017,149 +1018,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Attendance Details',
-                          style: TextStyle(
-                              color: blackColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18),
-                        ),
-                        (authProvider.role == 'emp')
-                            ? Text(
-                                'View Details',
-                                style: TextStyle(
-                                    color: blackColor,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15),
-                              )
-                            : Text(
-                                'View Employee',
-                                style: TextStyle(
-                                    color: blackColor,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15),
-                              ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 80,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: secondaryColor.withOpacity(0.3)),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Punch in',
-                                    style: TextStyle(
-                                        color: primaryColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  (punchin != '')
-                                      ? Text(punchin)
-                                      : Text(
-                                          '__:__',
-                                          style: TextStyle(
-                                            color: primaryColor,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Punch Out',
-                                    style: TextStyle(
-                                        color: primaryColor,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  (punchout != '')
-                                      ? Text(punchout)
-                                      : Text(
-                                          '__:__',
-                                          style: TextStyle(
-                                            color: primaryColor,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                ],
-                              ),
-                              InkWell(
-                                onTap: () async {
-                                  var time = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now());
-                                  print(time);
-                                  final time1 =
-                                      MaterialLocalizations.of(context);
-                                  if (punchin != '') {
-                                    setState(() {
-                                      punchout = time1.formatTimeOfDay(time!);
-                                    });
-                                  } else {
-                                    setState(() {
-                                      punchin = time1.formatTimeOfDay(time!);
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    color: primaryColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: primaryColor,
-                                        blurRadius: 1,
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.login_outlined,
-                                        color: whiteColor,
-                                      ),
-                                      Text(
-                                        'Punch in',
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: whiteColor,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),
