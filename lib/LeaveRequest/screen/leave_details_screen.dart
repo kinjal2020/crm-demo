@@ -19,7 +19,7 @@ class LeaveDetailsScreen extends StatefulWidget {
 }
 
 class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
-  String role = '';
+
   bool isApproveLoading = false;
   bool isRejectLoading = false;
 
@@ -29,7 +29,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     authProvider.role = pref.getString('role') ?? '';
     setState(() {});
-    print(role);
+
   }
 
   approveLeave() async {
@@ -63,6 +63,8 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+    Provider.of<AuthenticationProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -424,7 +426,7 @@ class _LeaveDetailsScreenState extends State<LeaveDetailsScreen> {
               //   height: 10,
               // ),
 
-              (role == 'hr')
+              (authProvider.role == 'hr')
                   ? (widget.leaveModel.status != 'Pending')
                       ? Container(
                           height: 55,

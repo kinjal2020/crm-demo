@@ -103,13 +103,14 @@ class _ChatScreenState extends State<ChatScreen> {
             alignment: Alignment.bottomLeft,
             child: Container(
               padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-              height: 60,
+              height: 70,
               width: double.infinity,
               color: Colors.white,
               child: Row(
                 children: <Widget>[
                   Expanded(
                     child: TextFormField(
+                      maxLines: 5,
                       controller: messageController,
                       decoration: InputDecoration(
                           hintText: "Write message...",

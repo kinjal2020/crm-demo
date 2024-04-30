@@ -97,19 +97,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   getData() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    role = pref.getString('role') ?? '';
+    print(role);
     final authProvider =
         Provider.of<AuthenticationProvider>(context, listen: false);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    authProvider.role = pref.getString('role') ?? '';
     await authProvider.getLoginUserInfo();
-    String room =
+    String room =authProvider.doc!.docs.isEmpty?'':
         chatRoomId(authProvider.doc!.docs[0]['employeeFirstName'], 'tester');
     setState(() {});
     _widgetOptions = [
       HomeScreen(),
       PayRollScreen(),
-      (role == 'emp') ? ShiftDetailsScreen() : LeaveRequestScreen(),
-      (role == 'emp')
+      (authProvider.role == 'emp') ? ShiftDetailsScreen() : LeaveRequestScreen(),
+      (authProvider.role == 'emp')
           ? ChatScreen(
               empName: 'HR',
               chatRoomId: room,
@@ -126,14 +127,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+    Provider.of<AuthenticationProvider>(context, listen: false);
     return Scaffold(
-      body: (role == '')
+      body: (authProvider.role == '')
           ? Center(
               child: CircularProgressIndicator(
               color: primaryColor,
             ))
           : Center(
-              child: _widgetOptions.elementAt(_selectedIndex),
+              child: (_widgetOptions.isEmpty)?Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  )):_widgetOptions.elementAt(_selectedIndex),
             ),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: grayColor,

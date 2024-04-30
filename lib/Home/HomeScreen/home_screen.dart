@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:carparking/Auth/choice_screen.dart';
 import 'package:carparking/Auth/login/login_screen.dart';
+import 'package:carparking/Auth/welcome_screen.dart';
 import 'package:carparking/Home/Employee/provider/employee_provider.dart';
 import 'package:carparking/Home/HomeScreen/provider/holiday_provider.dart';
 import 'package:carparking/Home/Profile/Screen/profile_screen.dart';
@@ -79,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   FirebaseAuth.instance.signOut();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => WelcomeScreen()),
                       (route) => false);
                 },
                 child: Container(
