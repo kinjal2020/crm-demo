@@ -51,3 +51,15 @@ Our goal is to develop a user-friendly application that makes it easier for an e
 <img src="https://github.com/kinjal2020/staffsync/blob/main/screen/15.png" height="300"/>
 <img src="https://github.com/kinjal2020/staffsync/blob/main/screen/23.png" height="300"/>
 </p>
+
+<h3> Task</h3>
+<p>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/20.png" height="300"/>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/21.png" height="300"/>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/26.png" height="300"/>
+</p>
+
+<h3> Security Locker</h3>
+<p>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/16.png" height="300"/>
+</p>
