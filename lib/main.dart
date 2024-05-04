@@ -97,11 +97,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   getData() async {
-    print(role);
+
     final authProvider =
         Provider.of<AuthenticationProvider>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
+
     authProvider.role = pref.getString('role') ?? '';
+    print(authProvider.role);
+    print(authProvider.role);
+    print(authProvider.role);
     await authProvider.getLoginUserInfo();
     String room =authProvider.doc!.docs.isEmpty?'':
         chatRoomId(authProvider.doc!.docs[0]['employeeFirstName'], 'tester');
@@ -155,10 +159,10 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'PayRoll',
           ),
           BottomNavigationBarItem(
-            icon: (role == 'emp')
+            icon: (authProvider.role == 'emp')
                 ? Icon(Icons.quick_contacts_mail_outlined)
                 : Icon(Icons.logout),
-            label: (role == 'emp') ? 'Shift' : 'Leave',
+            label: (authProvider.role == 'emp') ? 'Shift' : 'Leave',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.mark_chat_unread_outlined),
