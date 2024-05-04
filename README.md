@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-## Getting Started
+## Intoduction
 
 HR Employee management application is a software application designed to streamline and automate various HR Processes and tasks related to employee management. The application helps HR processing and employee management records.
 Our goal is to develop a user-friendly application that makes it easier for an employee and manager to keep records of their daily work activities even under their busy schedule. 
