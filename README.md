@@ -30,7 +30,15 @@ Our goal is to develop a user-friendly application that makes it easier for an e
 <h3> Home </h3>
 <p>
 <img src="https://github.com/kinjal2020/staffsync/blob/main/screen/8.png" height="300"/>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/17.png" height="300"/>
 </p>
+
+<h3> Employee </h3>
+<p>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/25.png" height="300"/>
+<img src="https://github.com/kinjal2020/staffsync/blob/main/screen/24.png" height="300"/>
+</p>
+
 <h3> Payroll </h3>
 <p>
 <img src="https://github.com/kinjal2020/staffsync/blob/main/screen/9.png" height="300"/>
