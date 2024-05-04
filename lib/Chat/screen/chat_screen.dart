@@ -68,6 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: snapshot.data!.docs.length,
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     itemBuilder: (context, index) {
+                      print(authProvider.doc!.docs[0]['employeeFirstName']);
                       return Container(
                         padding: EdgeInsets.only(
                             left: 14, right: 14, top: 10, bottom: 10),
@@ -79,7 +80,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: (index % 2 == 0
+                              color: (snapshot.data!.docs[index]['sendBy'] ==
+                                  authProvider.doc!.docs[0]['employeeFirstName']
                                   ? grayColor.withOpacity(0.3)
                                   : primaryColor),
                             ),
@@ -88,9 +90,10 @@ class _ChatScreenState extends State<ChatScreen> {
                               snapshot.data!.docs[index]['message'],
                               style: TextStyle(
                                   fontSize: 15,
-                                  color: (index % 2 != 0)
-                                      ? whiteColor
-                                      : blackColor),
+                                  color: snapshot.data!.docs[index]['sendBy'] ==
+                                      authProvider.doc!.docs[0]['employeeFirstName']
+                                      ? blackColor
+                                      : whiteColor),
                             ),
                           ),
                         ),
@@ -127,9 +130,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           messageController.text,
                           widget.chatRoomId,
                           widget.empName,
-                          widget.empName == 'HR'
-                              ? authProvider.doc!.docs[0]['employeeFirstName']
-                              : 'HR');
+                    authProvider.doc!.docs[0]['employeeFirstName']
+                            // : 'HR'
+                          );
 
                       messageController.clear();
                     },
